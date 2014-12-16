@@ -1,0 +1,12 @@
+[gulp](https://github.com/gulpjs/gulp)-[webpack](https://github.com/webpack/webpack)-build
+==========================================================================================
+
+Helps to build bundles based on webpack configs
+
+[![NPM](https://nodei.co/npm/gulp-webpack-build.png?downloads=true&stars=true)](https://nodei.co/npm/gulp-webpack-build/)
+
+## Usage
+
+``` javascript
+{"gitdown": "include", "file": "samples/gulpfile.js"}
+```

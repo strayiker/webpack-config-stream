@@ -1,0 +1,18 @@
+{
+  "name": "gulp-webpack-build",
+  "private": true,
+  "main": "index.js",
+  "version": "0.1.0",
+  "authors": [
+    "Marat Dreizin <mdreizin@fitbit.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/mdreizin/gulp-webpack-build",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

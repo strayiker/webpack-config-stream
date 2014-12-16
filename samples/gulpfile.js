@@ -1,17 +1,3 @@
-<!--
-This file has been generated using Gitdown (https://github.com/gajus/gitdown).
-Direct edits to this will be be overwritten. Look for Gitdown markup file under ./.gitdown/ path.
--->
-[gulp](https://github.com/gulpjs/gulp)-[webpack](https://github.com/webpack/webpack)-build
-==========================================================================================
-
-Helps to build bundles based on webpack configs
-
-[![NPM](https://nodei.co/npm/gulp-webpack-build.png?downloads=true&stars=true)](https://nodei.co/npm/gulp-webpack-build/)
-
-<h2 id="usage">Usage</h2>
-
-``` javascript
 'use strict';
 
 var gulp = require('gulp'),
@@ -46,5 +32,3 @@ gulp.task('webpack', [], function() {
         }))
         .pipe(gulp.dest('./dist'));
 });
-
-```

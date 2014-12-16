@@ -1,0 +1,43 @@
+{
+  "name": "gulp-webpack-build",
+  "version": "0.1.0",
+  "description": "Helps to build bundles based on webpack configs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mdreizin/gulp-webpack-build.git"
+  },
+  "keywords": [
+    "webpack",
+    "webpack config",
+    "webpack build",
+    "gulp",
+    "gulp webpack",
+    "gulp webpack build"
+  ],
+  "author": "Marat Dreizin <marat.dreizin@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mdreizin/gulp-webpack-build/issues"
+  },
+  "homepage": "https://github.com/mdreizin/gulp-webpack-build",
+  "devDependencies": {
+    "del": "^1.1.0",
+    "gitdown": "^1.2.6",
+    "gulp": "^3.8.10",
+    "gulp-eslint": "^0.2.0",
+    "run-sequence": "^1.0.2"
+  },
+  "dependencies": {
+    "gulp-util": "^3.0.1",
+    "memory-fs": "^0.1.0",
+    "q": "^1.1.2",
+    "through2": "^0.6.3",
+    "tildify": "^1.0.0",
+    "webpack": "^1.4.13",
+    "webpack-config": "^0.1.5"
+  }
+}
