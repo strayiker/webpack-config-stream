@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>gulp-webpack-build by mdreizin</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>gulp-webpack-build</h1>
+        <p>Helps to generate bundles based on webpack config</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/mdreizin/gulp-webpack-build" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/mdreizin/gulp-webpack-build/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/mdreizin/gulp-webpack-build/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        
+
+<p><a href="https://www.npmjs.org/package/gulp-webpack-build"><img src="http://img.shields.io/npm/v/gulp-webpack-build.svg?style=flat" alt="NPM version"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build"><img src="https://david-dm.org/mdreizin/gulp-webpack-build.svg?style=flat" alt="Dependency Status"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build#info=devDependencies"><img src="https://david-dm.org/mdreizin/gulp-webpack-build/dev-status.svg?style=flat" alt="Dependency Status"></a></p>
+
+<p><a href="https://nodei.co/npm/gulp-webpack-build/"><img src="https://nodei.co/npm/gulp-webpack-build.png?downloads=true&amp;stars=true" alt="NPM"></a></p>
+
+<h1>
+<a id="gulp-webpack-build" class="anchor" href="#gulp-webpack-build" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+<a href="https://github.com/gulpjs/gulp">gulp</a>-<a href="https://github.com/webpack/webpack">webpack</a>-build</h1>
+
+<p>Helps to build bundles based on webpack configs</p>
+
+<h2 id="usage">
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-s1"><span class="pl-pds">'</span>use strict<span class="pl-pds">'</span></span>;
+
+<span class="pl-s">var</span> gulp <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>gulp<span class="pl-pds">'</span></span>),
+    webpack <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>gulp-webpack-build<span class="pl-pds">'</span></span>);
+
+gulp.task(<span class="pl-s1"><span class="pl-pds">'</span>webpack<span class="pl-pds">'</span></span>, [], <span class="pl-st">function</span>() {
+    <span class="pl-k">return</span> gulp.<span class="pl-sc">src</span>(<span class="pl-s1"><span class="pl-pds">'</span>./src/**<span class="pl-pds">'</span></span>)
+        .pipe(webpack({
+            debug<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+            verbose<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+            stats<span class="pl-k">:</span> {
+                colors<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+                hash<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+                timings<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+                chunks<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+                chunkModules<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+                modules<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+                children<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+                version<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+                cached<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+                cachedAssets<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+                reasons<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+                source<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+                errorDetails<span class="pl-k">:</span> <span class="pl-c1">false</span>
+            },
+            <span class="pl-en">processIf</span>: <span class="pl-st">function</span>(<span class="pl-vpf">file</span>) {
+                <span class="pl-k">return</span> file.path.<span class="pl-s3">indexOf</span>(webpack.CONFIG_FILENAME) <span class="pl-k">&gt;=</span> <span class="pl-c1">0</span>;
+            },
+            <span class="pl-en">compileIf</span>: <span class="pl-st">function</span>(<span class="pl-vpf">config</span>) {
+                <span class="pl-k">return</span> config.gulp <span class="pl-k">===</span> <span class="pl-c1">true</span>;
+            }
+        }))
+        .pipe(gulp.dest(<span class="pl-s1"><span class="pl-pds">'</span>./dist<span class="pl-pds">'</span></span>));
+});
+</pre></div>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/mdreizin">mdreizin</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-40735417-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
