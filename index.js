@@ -69,7 +69,7 @@ function compileConfig(file, webpackConfig, statsOptions) {
         if (err) {
             deferred.reject(err);
         } else {
-            gutil.log(stats.toString(statsOptions));
+            gutil.log('\n' + stats.toString(statsOptions));
         }
     });
 
