@@ -29,7 +29,7 @@ var PLUGIN_NAME = 'gulp-webpack-config',
 
 function buildConfig(file, options) {
     var webpackFile = path.resolve(file.path),
-        webpackConfig = WebpackConfig.load(webpackFile);
+        webpackConfig = WebpackConfig.load(webpackFile, false);
 
     if (options.debug) {
         webpackConfig.merge({
@@ -112,10 +112,10 @@ module.exports = function(options) {
         statsOptions = verbose ? { colors: true } : buildStats(options.stats);
 
     return through.obj(function(file, encoding, callback) {
-        if (processIf(file)) {
+        if (processIf(file) === true) {
             var webpackConfig = buildConfig(file, options);
 
-            if (compileIf(webpackConfig)) {
+            if (compileIf(webpackConfig) === true) {
                 compileConfig(file, webpackConfig, statsOptions).then(function(files) {
                     files.forEach(function(file) {
                         this.push(file);
