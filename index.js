@@ -7,7 +7,8 @@ var path = require('path'),
     gutil = require('gulp-util'),
     defaults = require('defaults'),
     WebpackConfig = require('webpack-config'),
-    Compiler = require('./lib/compiler');
+    Compiler = require('./lib/compiler'),
+    utils = require('./lib/utils');
 
 var PLUGIN_NAME = 'gulp-webpack-build',
     CONFIG_FILENAME = WebpackConfig.CONFIG_FILENAME,
@@ -30,18 +31,6 @@ var PLUGIN_NAME = 'gulp-webpack-build',
         colors: true,
         version: false
     };
-
-function isFunction(value) {
-    return typeof value === 'function';
-}
-
-function isUndefined(value) {
-    return typeof value === 'undefined';
-}
-
-function isObject(value) {
-    return value != null && typeof value === 'object';
-}
 
 function wrapError(err) {
     return new gutil.PluginError(PLUGIN_NAME, err);
@@ -72,7 +61,7 @@ function getFiles(stats) {
                 });
             }
         }).filter(function(file) {
-            return !isUndefined(file);
+            return utils.isDefined(file);
         }).map(function(file) {
             file.stats = stats;
 
@@ -84,7 +73,7 @@ function getFiles(stats) {
 }
 
 function compile(options) {
-    if (!isObject(options)) { options = {}; }
+    if (!utils.isObject(options)) { options = {}; }
 
     delete options.watch;
 
@@ -110,7 +99,7 @@ function compile(options) {
 }
 
 function done(callback) {
-    if (!isFunction(callback)) { callback = function() {}; }
+    if (!utils.isFunction(callback)) { callback = function() {}; }
 
     var cache = [];
 
@@ -130,7 +119,7 @@ function done(callback) {
 }
 
 function format(options) {
-    if (!isObject(options)) { options = {}; }
+    if (!utils.isObject(options)) { options = {}; }
 
     var cache = [],
         statsOptions = options.verbose === true ? defaults(options, defaultVerboseStatsOptions) : defaults(options, defaultStatsOptions);
@@ -190,10 +179,10 @@ function failAfter(options) {
 var watchers = {};
 
 function watch(filename, options, globOptions, callback) {
-    if (!isObject(options)) { options = {}; }
-    if (isFunction(globOptions)) { callback = globOptions; }
-    if (!isObject(globOptions)) { globOptions = {}; }
-    if (!isFunction(callback)) { callback = function() {}; }
+    if (!utils.isObject(options)) { options = {}; }
+    if (utils.isFunction(globOptions)) { callback = globOptions; }
+    if (!utils.isObject(globOptions)) { globOptions = {}; }
+    if (!utils.isFunction(callback)) { callback = function() {}; }
 
     options.watch = true;
 
