@@ -32,9 +32,9 @@
     "run-sequence": "^1.0.2"
   },
   "dependencies": {
+    "defaults": "^1.0.0",
     "gulp-util": "^3.0.1",
     "memory-fs": "^0.1.0",
-    "q": "^1.1.2",
     "through2": "^0.6.3",
     "tildify": "^1.0.0",
     "webpack": "^1.4.13",

@@ -1,136 +1,240 @@
 'use strict';
 
 var path = require('path'),
-    q = require('q'),
     through = require('through2'),
     tildify = require('tildify'),
-    MemoryFileSystem = require('memory-fs'),
+    gulp = require('gulp'),
     gutil = require('gulp-util'),
-    webpack = require('webpack'),
-    WebpackConfig = require('webpack-config');
+    defaults = require('defaults'),
+    WebpackConfig = require('webpack-config'),
+    Compiler = require('./lib/Compiler');
 
-var PLUGIN_NAME = 'gulp-webpack-config',
+var PLUGIN_NAME = 'gulp-webpack-build',
     CONFIG_FILENAME = WebpackConfig.CONFIG_FILENAME,
     defaultStatsOptions = {
-      colors: true,
-      hash: false,
-      timings: false,
-      chunks: false,
-      chunkModules: false,
-      modules: false,
-      children: true,
-      version: true,
-      cached: false,
-      cachedAssets: false,
-      reasons: false,
-      source: false,
-      errorDetails: false
-  };
+        colors: true,
+        hash: false,
+        timings: false,
+        chunks: false,
+        chunkModules: false,
+        modules: false,
+        children: true,
+        version: true,
+        cached: false,
+        cachedAssets: false,
+        reasons: false,
+        source: false,
+        errorDetails: false
+    },
+    defaultVerboseStatsOptions = {
+        colors: true,
+        version: false
+    };
 
-function buildConfig(file, options) {
-    var webpackFile = path.resolve(file.path),
-        webpackConfig = WebpackConfig.load(webpackFile, false);
+function isFunction(value) {
+    return typeof value === 'function';
+}
 
-    if (options.debug) {
-        webpackConfig.merge({
-            debug: true,
-            devtool: '#source-map'
+function isUndefined(value) {
+    return typeof value === 'undefined';
+}
+
+function isObject(value) {
+    return value != null && typeof value === 'object';
+}
+
+function wrapError(err) {
+    return new gutil.PluginError(PLUGIN_NAME, err);
+}
+
+function getFiles(stats) {
+    var files = [];
+
+    if (stats) {
+        var compilation = stats.compilation,
+            assets = compilation.assets || {},
+            compiler = compilation.compiler,
+            fs = compiler.outputFileSystem,
+            file = compilation.options.file;
+
+        return Object.keys(assets).map(function(name) {
+            var emitted = assets[name].emitted === true;
+
+            if (emitted) {
+                var outputPath = fs.join(compiler.outputPath, name),
+                    base = path.resolve(outputPath, file.base),
+                    contents = fs.readFileSync(outputPath);
+
+                return new gutil.File({
+                    base: base,
+                    path: outputPath,
+                    contents: contents
+                });
+            }
+        }).filter(function(file) {
+            return !isUndefined(file);
+        }).map(function(file) {
+            file.stats = stats;
+
+            return file;
         });
     }
 
-    webpackConfig.output = webpackConfig.output || {};
-
-    if (!webpackConfig.output.path) {
-        webpackConfig.output.path = path.dirname(webpackFile);
-    }
-
-    return webpackConfig;
+    return files;
 }
 
-function buildStats(statsOptions) {
-    if (!statsOptions) { statsOptions = {}; }
+function compile(options) {
+    if (!isObject(options)) { options = {}; }
 
-    Object.keys(defaultStatsOptions).forEach(function(key) {
-        if (typeof statsOptions[key] === 'undefined') {
-            statsOptions[key] = defaultStatsOptions[key];
-        }
-    });
+    delete options.watch;
 
-    return statsOptions;
-}
+    return through.obj(function(chunk, enc, callback) {
+        var compiler = new Compiler(options);
 
-function compileConfig(file, webpackConfig, statsOptions) {
-    var compiler = webpack(webpackConfig),
-        deferred = q.defer();
+        var result = compiler.run(chunk, function(err, stats) {
+            var files = getFiles(stats);
 
-    compiler.run(function(err, stats) {
-        gutil.log('Using config', gutil.colors.magenta(tildify(path.resolve(file.path))));
+            files.forEach(function(file) {
+                this.push(file);
+            }, this);
 
-        if (err) {
-            deferred.reject(err);
-        } else {
-            gutil.log('\n' + stats.toString(statsOptions));
-        }
-    });
+            if (err) { this.emit('error', wrapError(err)); }
 
-    var ms = compiler.outputFileSystem = new MemoryFileSystem();
+            callback(err);
+        }.bind(this));
 
-    compiler.plugin('after-emit', function(compilation, callback) {
-        var assets = compilation.assets || {},
-            files = Object.keys(assets).map(function(name) {
-                var emitted = assets[name].emitted === true;
-
-                if (emitted) {
-                    var outputPath = ms.join(compiler.outputPath, name),
-                        base = path.resolve(outputPath, file.base),
-                        contents = ms.readFileSync(outputPath);
-
-                    return new gutil.File({
-                        base: base,
-                        path: outputPath,
-                        contents: contents
-                    });
-                }
-            }).filter(function(file) {
-                return typeof file !== 'undefined';
-            });
-
-        deferred.resolve(files);
-
-        callback();
-    });
-
-    return deferred.promise;
-}
-
-module.exports = function(options) {
-    if (!options) { options = {}; }
-
-    var verbose = options.verbose === true,
-        processIf = options.processIf || function(x) { return x.path.indexOf(CONFIG_FILENAME) >= 0; },
-        compileIf = options.compileIf || function(x) { return x.gulp === true; },
-        statsOptions = verbose ? { colors: true } : buildStats(options.stats);
-
-    return through.obj(function(file, encoding, callback) {
-        if (processIf(file) === true) {
-            var webpackConfig = buildConfig(file, options);
-
-            if (compileIf(webpackConfig) === true) {
-                compileConfig(file, webpackConfig, statsOptions).then(function(files) {
-                    files.forEach(function(file) {
-                        this.push(file);
-                    }.bind(this));
-
-                    callback();
-                }.bind(this)).catch(function(err) {
-                    this.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
-                }.bind(this));
-            } else {
-                callback();
-            }
-        } else {
+        if (!result) {
             callback();
         }
     });
+}
+
+function done(callback) {
+    if (!isFunction(callback)) { callback = function() {}; }
+
+    var cache = [];
+
+    return through.obj(function(chunk, enc, cb) {
+        var stats = chunk.stats;
+
+        if (cache && cache.indexOf(stats) < 0) {
+            cache.push(stats);
+
+            callback(stats);
+        }
+
+        cb(null, chunk);
+    }).once('end', function() {
+        cache.splice(0, cache.length);
+    });
+}
+
+function format(options) {
+    if (!isObject(options)) { options = {}; }
+
+    var cache = [],
+        statsOptions = options.verbose === true ? defaults(options, defaultVerboseStatsOptions) : defaults(options, defaultStatsOptions);
+
+    return through.obj(function(chunk, enc, callback) {
+        var stats = chunk.stats;
+
+        if (cache && cache.indexOf(stats) < 0) {
+            var compilation = stats.compilation,
+                filename = path.resolve(compilation.options.file.path);
+
+            cache.push(stats);
+
+            gutil.log('Compiling webpack config', gutil.colors.magenta(tildify(filename)));
+            gutil.log('\n' + stats.toString(statsOptions));
+        }
+
+        callback(null, chunk);
+    }).once('end', function() {
+        cache.splice(0, cache.length);
+    });
+}
+
+function failAfter(options) {
+    var cache = [];
+
+    return through.obj(function(chunk, enc, cb) {
+        var stats = chunk.stats;
+
+        if (stats && cache.indexOf(stats) < 0) {
+            cache.push(stats);
+        }
+
+        cb(null, chunk);
+    }).once('end', function() {
+        var hasErrors = false,
+            hasWarnings = false;
+
+        if (options.errors === true) {
+            hasErrors = cache.some(function(x) { return x.hasErrors(); });
+        }
+
+        if (options.warnings === true) {
+            hasWarnings = cache.some(function(x) { return x.hasWarnings(); });
+        }
+
+        if (hasErrors || hasWarnings) {
+            var err = new Error('Webpack cannot compile config');
+
+            this.emit('error', wrapError(err));
+        }
+
+        cache.splice(0, cache.length);
+    });
+}
+
+var watchers = {};
+
+function watch(filename, options, globOptions, callback) {
+    if (!isObject(options)) { options = {}; }
+    if (isFunction(globOptions)) { callback = globOptions; }
+    if (!isObject(globOptions)) { globOptions = {}; }
+    if (!isFunction(callback)) { callback = function() {}; }
+
+    options.watch = true;
+
+    var src = WebpackConfig.closest(filename);
+
+    gulp.src(src, globOptions)
+        .pipe(through.obj(function(chunk, enc, cb) {
+            if (!watchers[chunk.path]) {
+                gutil.log('Watching webpack config', gutil.colors.magenta(tildify(src)));
+
+                var compiler = new Compiler(options);
+
+                watchers[chunk.path] = compiler.watch(chunk, function(err, stats) {
+                    callback(err, stats);
+                });
+            }
+
+            cb();
+        }));
+}
+
+function proxy(err, stats) {
+    return through.obj(function(chunk, enc, cb) {
+        var files = getFiles(stats);
+
+        files.forEach(function(file) {
+            this.push(file);
+        }, this);
+
+        if (err) { this.emit('error', wrapError(err)); }
+
+        cb(err);
+    });
+}
+
+module.exports = {
+    compile: compile,
+    done: done,
+    format: format,
+    failAfter: failAfter,
+    watch: watch,
+    proxy: proxy,
+    CONFIG_FILENAME: CONFIG_FILENAME
 };
-module.exports.CONFIG_FILENAME = CONFIG_FILENAME;

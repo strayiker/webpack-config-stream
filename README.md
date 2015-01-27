@@ -16,37 +16,45 @@ Helps to build bundles based on webpack configs
 ``` javascript
 'use strict';
 
-var gulp = require('gulp'),
+var path = require('path'),
+    gulp = require('gulp'),
     webpack = require('gulp-webpack-build');
 
+var src = './src/**',
+    dest = './dist',
+    webpackOptions = {
+        debug: true,
+        devtool: '#source-map'
+    };
+
 gulp.task('webpack', [], function() {
-    return gulp.src('./src/**')
-        .pipe(webpack({
-            debug: true,
-            verbose: false,
-            stats: {
-                colors: true,
-                hash: false,
-                timings: false,
-                chunks: false,
-                chunkModules: false,
-                modules: false,
-                children: true,
-                version: false,
-                cached: false,
-                cachedAssets: false,
-                reasons: false,
-                source: false,
-                errorDetails: false
-            },
-            processIf: function(file) {
-                return file.path.indexOf(webpack.CONFIG_FILENAME) >= 0;
-            },
-            compileIf: function(config) {
-                return config.gulp === true;
-            }
+    return gulp.src(src)
+        .pipe(webpack.compile(webpackOptions))
+        .pipe(webpack.format({
+            version: false,
+            timings: true
         }))
-        .pipe(gulp.dest('./dist'));
+        .pipe(webpack.failAfter({
+            errors: true,
+            warnings: true
+        }))
+        .pipe(gulp.dest(dest));
+});
+
+gulp.task('watch', function() {
+    gulp.watch(src).on('change', function(event) {
+        if (event.type === 'changed') {
+            webpack.watch(event.path, webpackOptions, { base: path.resolve(event.path) }, function(err, stats) {
+                gulp.src(event.path)
+                    .pipe(webpack.proxy(err, stats))
+                    .pipe(webpack.format({
+                        verbose: true,
+                        version: false
+                    }))
+                    .pipe(gulp.dest(dest));
+            });
+        }
+    });
 });
 
 ```

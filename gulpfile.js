@@ -8,14 +8,18 @@ var path = require('path'),
     webpack = require('./'),
     gitdown = require('gitdown');
 
-var src = path.resolve('./test/fixtures'),
-    dest = path.resolve('./test/expected'),
+var src = './test/fixtures/**',
+    dest = './test/expected',
     paths = {
         scripts: [
             path.join(src, '**/*.js'),
             path.join('./samples', '**/*.js'),
             'gulpfile.js'
         ]
+    },
+    webpackOptions = {
+        debug: true,
+        devtool: '#source-map'
     };
 
 gulp.task('lint', function() {
@@ -26,18 +30,33 @@ gulp.task('lint', function() {
 });
 
 gulp.task('webpack', [], function() {
-    return gulp.src(path.join(src, '**'))
-        .pipe(webpack({
-            debug: true,
-            verbose: false,
-            stats: {
-                version: false
-            },
-            accept: function(config) {
-                return config.gulp === true;
-            }
+    return gulp.src(src)
+        .pipe(webpack.compile(webpackOptions))
+        .pipe(webpack.format({
+            version: false,
+            timings: true
+        }))
+        .pipe(webpack.failAfter({
+            errors: true,
+            warnings: true
         }))
         .pipe(gulp.dest(dest));
+});
+
+gulp.task('watch', [], function() {
+    gulp.watch(src).on('change', function(event) {
+        if (event.type === 'changed') {
+            webpack.watch(event.path, webpackOptions, { base: path.dirname(event.path) }, function(err, stats) {
+                gulp.src(event.path)
+                    .pipe(webpack.proxy(err, stats))
+                    .pipe(webpack.format({
+                        verbose: true,
+                        version: false
+                    }))
+                    .pipe(gulp.dest(dest));
+            });
+        }
+    });
 });
 
 gulp.task('clean', function(callback) {
