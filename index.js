@@ -7,7 +7,7 @@ var path = require('path'),
     gutil = require('gulp-util'),
     defaults = require('defaults'),
     WebpackConfig = require('webpack-config'),
-    Compiler = require('./lib/Compiler');
+    Compiler = require('./lib/compiler');
 
 var PLUGIN_NAME = 'gulp-webpack-build',
     CONFIG_FILENAME = WebpackConfig.CONFIG_FILENAME,
