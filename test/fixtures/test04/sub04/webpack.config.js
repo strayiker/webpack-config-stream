@@ -6,7 +6,6 @@ var path = require('path'),
 module.exports = WebpackConfig.load().extend({
     gulp: true,
     entry: {
-        test1: path.join(__dirname, 'index.js'),
-        test2: path.join(__dirname, 'index.js')
+        test4: path.join(__dirname, 'index.js')
     }
 });
