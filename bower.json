@@ -2,7 +2,7 @@
   "name": "gulp-webpack-build",
   "private": true,
   "main": "index.js",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "authors": [
     "Marat Dreizin <mdreizin@fitbit.com>"
   ],
