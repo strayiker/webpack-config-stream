@@ -1,6 +1,6 @@
 {
   "name": "gulp-webpack-build",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Helps to build bundles based on webpack configs",
   "main": "index.js",
   "scripts": {
