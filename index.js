@@ -6,12 +6,12 @@ var path = require('path'),
     gulp = require('gulp'),
     gutil = require('gulp-util'),
     defaults = require('defaults'),
+    webpack = require('webpack'),
     WebpackConfig = require('webpack-config'),
     Compiler = require('./lib/compiler'),
     utils = require('./lib/utils');
 
 var PLUGIN_NAME = 'gulp-webpack-build',
-    CONFIG_FILENAME = WebpackConfig.CONFIG_FILENAME,
     defaultStatsOptions = {
         colors: true,
         hash: false,
@@ -225,5 +225,6 @@ module.exports = {
     failAfter: failAfter,
     watch: watch,
     proxy: proxy,
-    CONFIG_FILENAME: CONFIG_FILENAME
+    core: webpack,
+    config: WebpackConfig
 };
