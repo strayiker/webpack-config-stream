@@ -84,7 +84,7 @@ Please see [`watchDelay`](http://webpack.github.io/docs/configuration.html#watch
 #### globOptions
 Type: `Object`
 
-Options to pass to [node-glob] through [glob-stream].
+Options to pass to [node-glob](https://github.com/isaacs/node-glob) through [glob-stream](https://github.com/wearefractal/glob-stream).
 
 #### callback(err, stats)
 Type: `Function`
