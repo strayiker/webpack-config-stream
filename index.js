@@ -72,12 +72,13 @@ function getFiles(stats) {
     return files;
 }
 
-function compile(options) {
+function compile(options, callback) {
     if (!utils.isObject(options)) { options = {}; }
+    if (!utils.isFunction(callback)) { callback = function() {}; }
 
     delete options.watch;
 
-    return through.obj(function(chunk, enc, callback) {
+    return through.obj(function(chunk, enc, cb) {
         var compiler = new Compiler(options);
 
         var result = compiler.run(chunk, function(err, stats) {
@@ -89,32 +90,13 @@ function compile(options) {
 
             if (err) { this.emit('error', wrapError(err)); }
 
-            callback(err);
+            cb(err);
+            callback(err, stats);
         }.bind(this));
 
         if (!result) {
-            callback();
+            cb();
         }
-    });
-}
-
-function done(callback) {
-    if (!utils.isFunction(callback)) { callback = function() {}; }
-
-    var cache = [];
-
-    return through.obj(function(chunk, enc, cb) {
-        var stats = chunk.stats;
-
-        if (cache && cache.indexOf(stats) < 0) {
-            cache.push(stats);
-
-            callback(stats);
-        }
-
-        cb(null, chunk);
-    }).once('end', function() {
-        cache.splice(0, cache.length);
     });
 }
 
@@ -220,7 +202,6 @@ function proxy(err, stats) {
 
 module.exports = {
     compile: compile,
-    done: done,
     format: format,
     failAfter: failAfter,
     watch: watch,
