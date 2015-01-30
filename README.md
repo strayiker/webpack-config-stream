@@ -11,7 +11,15 @@ Direct edits to this will be be overwritten. Look for Gitdown markup file under 
 
 Helps to build bundles based on webpack configs
 
-<h2 id="usage">Usage</h2>
+<h2 id="documentation">Documentation</h2>
+
+For API docs please see the [documentation page](https://github.com/mdreizin/gulp-webpack-build/blob/master/docs/API.md)!
+
+<h2 id="sample">Sample</h2>
+
+Here is a quick sample of what `gulp-webpack-build` does
+
+`gulpfile.js`
 
 ``` javascript
 'use strict';
