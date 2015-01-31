@@ -6,9 +6,9 @@ var path = require('path'),
     eslint = require('gulp-eslint'),
     runSequence = require('run-sequence'),
     webpack = require('./'),
-    gitdown = require('gitdown');
+    Gitdown = require('gitdown');
 
-var src = './test/fixtures/**',
+var src = './test/fixtures/**/' + webpack.config.CONFIG_FILENAME,
     dest = './test/expected',
     paths = {
         scripts: [
@@ -63,11 +63,23 @@ gulp.task('clean', function(callback) {
     del(path.join(dest, '**'), callback);
 });
 
-gulp.task('docs', ['gitdown']);
-
-gulp.task('gitdown', function() {
-    return gitdown.read('.gitdown/README.md').write('README.md');
+gulp.task('gitdown:readme', function() {
+    return Gitdown.read('.gitdown/README.md').write('README.md');
 });
+
+gulp.task('gitdown:docs:api', function() {
+    var gitdown = Gitdown.read('.gitdown/docs/API.md');
+
+    gitdown.config.headingNesting.enabled = false;
+
+    return gitdown.write('docs/API.md');
+});
+
+gulp.task('gitdown', function(callback) {
+    runSequence('gitdown:readme', 'gitdown:docs:api', callback);
+});
+
+gulp.task('docs', ['gitdown']);
 
 gulp.task('default', [], function(callback) {
     runSequence('clean', 'lint', 'docs', 'webpack', callback);

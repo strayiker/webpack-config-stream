@@ -28,7 +28,7 @@ var path = require('path'),
     gulp = require('gulp'),
     webpack = require('gulp-webpack-build');
 
-var src = './src/**',
+var src = './src/**/' + webpack.config.CONFIG_FILENAME,
     dest = './dist',
     webpackOptions = {
         debug: true,
