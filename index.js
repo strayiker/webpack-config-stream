@@ -9,7 +9,7 @@ var path = require('path'),
     webpack = require('webpack'),
     WebpackConfig = require('webpack-config'),
     Compiler = require('./lib/compiler'),
-    utils = require('./lib/utils');
+    util = require('./lib/util');
 
 var PLUGIN_NAME = 'gulp-webpack-build',
     defaultStatsOptions = {
@@ -61,7 +61,7 @@ function getFiles(stats) {
                 });
             }
         }).filter(function(file) {
-            return utils.isDefined(file);
+            return util.isDefined(file);
         }).map(function(file) {
             file.stats = stats;
 
@@ -87,8 +87,8 @@ function processStats(chunk, stats) {
 }
 
 function compile(options, callback) {
-    if (!utils.isObject(options)) { options = {}; }
-    if (!utils.isFunction(callback)) { callback = function() {}; }
+    if (!util.isObject(options)) { options = {}; }
+    if (!util.isFunction(callback)) { callback = function() {}; }
 
     delete options.watch;
 
@@ -111,7 +111,7 @@ function compile(options, callback) {
 }
 
 function format(options) {
-    if (!utils.isObject(options)) { options = {}; }
+    if (!util.isObject(options)) { options = {}; }
 
     var cache = [],
         statsOptions = options.verbose === true ? defaults(options, defaultVerboseStatsOptions) : defaults(options, defaultStatsOptions);
@@ -171,10 +171,10 @@ function failAfter(options) {
 var watchers = {};
 
 function watch(filename, options, globOptions, callback) {
-    if (!utils.isObject(options)) { options = {}; }
-    if (utils.isFunction(globOptions)) { callback = globOptions; }
-    if (!utils.isObject(globOptions)) { globOptions = {}; }
-    if (!utils.isFunction(callback)) { callback = function() {}; }
+    if (!util.isObject(options)) { options = {}; }
+    if (util.isFunction(globOptions)) { callback = globOptions; }
+    if (!util.isObject(globOptions)) { globOptions = {}; }
+    if (!util.isFunction(callback)) { callback = function() {}; }
 
     options.watch = true;
 
