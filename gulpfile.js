@@ -8,18 +8,24 @@ var path = require('path'),
     webpack = require('./'),
     Gitdown = require('gitdown');
 
-var src = './test/fixtures/**/' + webpack.config.CONFIG_FILENAME,
+var src = './test/fixtures/**/',
     dest = './test/expected',
     paths = {
         scripts: [
-            path.join(src, '**/*.js'),
+            path.join(src, '*.js'),
             path.join('./samples', '**/*.js'),
             'gulpfile.js'
         ]
     },
     webpackOptions = {
         debug: true,
-        devtool: '#source-map'
+        devtool: '#source-map',
+        isConfigFile: function(file) {
+            return file && file.path.indexOf(webpack.config.CONFIG_FILENAME) >= 0;
+        },
+        isConfigObject: function(config) {
+            return config && !config.ignore;
+        }
     };
 
 gulp.task('lint', function() {
@@ -30,7 +36,7 @@ gulp.task('lint', function() {
 });
 
 gulp.task('webpack', [], function() {
-    return gulp.src(src)
+    return gulp.src(src + webpack.config.CONFIG_FILENAME)
         .pipe(webpack.compile(webpackOptions))
         .pipe(webpack.format({
             version: false,
@@ -44,7 +50,7 @@ gulp.task('webpack', [], function() {
 });
 
 gulp.task('watch', [], function() {
-    gulp.watch(src).on('change', function(event) {
+    gulp.watch(src + '*.js').on('change', function(event) {
         if (event.type === 'changed') {
             webpack.watch(event.path, webpackOptions, { base: path.dirname(event.path) }, function(err, stats) {
                 gulp.src(event.path)

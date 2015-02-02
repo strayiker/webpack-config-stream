@@ -14,6 +14,32 @@ Overrides existing properties of each `webpack.config.js` file.
 
 Please see [configuration](http://webpack.github.io/docs/configuration.html#configuration-object-content).
 
+##### options.isConfig(file)
+Type: `Function`
+
+By default this plugin uses the following function to filter `webpack.config.js` [`files`](https://github.com/wearefractal/vinyl):
+
+```
+function isConfigFile(file) {
+    return file && file.path.indexOf(WebpackConfig.CONFIG_FILENAME) >= 0;
+}
+```
+
+Uses a new `Function` to override this behavior.
+
+##### options.isConfigObject(config)
+Type: `Function`
+
+By default this plugin uses the following function to filter webpack [`configuration`](http://webpack.github.io/docs/configuration.html#configuration-object-content) objects:
+
+```
+function isConfigObject(config) {
+    return config != null && typeof config === 'object';
+}
+```
+
+Uses a new `Function` to override this behavior.
+
 #### callback(err, stats)
 Type: `Function`
 
@@ -79,6 +105,32 @@ Please see [configuration](http://webpack.github.io/docs/configuration.html#conf
 Type: `Integer`
 
 Please see [`watchDelay`](http://webpack.github.io/docs/configuration.html#watchdelay).
+
+##### options.isConfig(file)
+Type: `Function`
+
+By default this plugin uses the following function to filter `webpack.config.js` [`files`](https://github.com/wearefractal/vinyl):
+
+```
+function isConfigFile(file) {
+    return file && file.path.indexOf(WebpackConfig.CONFIG_FILENAME) >= 0;
+}
+```
+
+Uses a new `Function` to override this behavior.
+
+##### options.isConfigObject(config)
+Type: `Function`
+
+By default this plugin uses the following function to filter webpack [`configuration`](http://webpack.github.io/docs/configuration.html#configuration-object-content) objects:
+
+```
+function isConfigObject(config) {
+    return config != null && typeof config === 'object';
+}
+```
+
+Uses a new `Function` to override this behavior.
 
 #### globOptions
 Type: `Object`
