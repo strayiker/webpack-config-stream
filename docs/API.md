@@ -66,7 +66,7 @@ Overrides existing properties of each `webpack.config.js` file.
 
 Please see [configuration](http://webpack.github.io/docs/configuration.html#configuration-object-content).
 
-##### options.isConfig(file)
+##### options.isConfigFile(file)
 Type: `Function`
 
 By default this plugin uses the following function to filter `webpack.config.js` [`files`](https://github.com/wearefractal/vinyl):
@@ -158,7 +158,7 @@ Type: `Integer`
 
 Please see [`watchDelay`](http://webpack.github.io/docs/configuration.html#watchdelay).
 
-##### options.isConfig(file)
+##### options.isConfigFile(file)
 Type: `Function`
 
 By default this plugin uses the following function to filter `webpack.config.js` [`files`](https://github.com/wearefractal/vinyl):
