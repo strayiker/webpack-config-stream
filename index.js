@@ -116,6 +116,10 @@ function format(options) {
     var cache = [],
         statsOptions = options.verbose === true ? defaults(options, defaultVerboseStatsOptions) : defaults(options, defaultStatsOptions);
 
+    if (!gutil.colors.supportsColor) {
+        statsOptions.colors = false;
+    }
+
     return through.obj(function(chunk, enc, callback) {
         var stats = chunk.stats;
 
