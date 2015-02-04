@@ -2,9 +2,9 @@
   "name": "gulp-webpack-build",
   "private": true,
   "main": "index.js",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "authors": [
-    "Marat Dreizin <mdreizin@fitbit.com>"
+    "Marat Dreizin <marat.dreizin@gmail.com>"
   ],
   "license": "MIT",
   "homepage": "https://github.com/mdreizin/gulp-webpack-build",
