@@ -151,7 +151,7 @@ Fails build if some `stats` objects have some warnings.
 
 ### webpack.closest
 
-Finds closest `webpack.config.js` file and need to be used together with `webpack.watch`. Can be piped.
+Finds closest `webpack.config.js` file. Needs to be used together with `webpack.watch`. Can be piped.
 
 ### webpack.watch(options, callback)
 
