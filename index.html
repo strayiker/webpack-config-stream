@@ -58,21 +58,23 @@
     gulp <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>gulp<span class="pl-pds">'</span></span>),
     webpack <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>gulp-webpack-build<span class="pl-pds">'</span></span>);
 
-<span class="pl-s">var</span> src <span class="pl-k">=</span> <span class="pl-s1"><span class="pl-pds">'</span>./src/**/<span class="pl-pds">'</span></span>,
+<span class="pl-s">var</span> src <span class="pl-k">=</span> <span class="pl-s1"><span class="pl-pds">'</span>./src<span class="pl-pds">'</span></span>,
     dest <span class="pl-k">=</span> <span class="pl-s1"><span class="pl-pds">'</span>./dist<span class="pl-pds">'</span></span>,
     webpackOptions <span class="pl-k">=</span> {
         debug<span class="pl-k">:</span> <span class="pl-c1">true</span>,
         devtool<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>#source-map<span class="pl-pds">'</span></span>,
+        watchDelay<span class="pl-k">:</span> <span class="pl-c1">200</span>,
         <span class="pl-en">isConfigFile</span>: <span class="pl-st">function</span>(<span class="pl-vpf">file</span>) {
             <span class="pl-k">return</span> file <span class="pl-k">&amp;&amp;</span> file.path.<span class="pl-s3">indexOf</span>(webpack.config.CONFIG_FILENAME) <span class="pl-k">&gt;=</span> <span class="pl-c1">0</span>;
         },
         <span class="pl-en">isConfigObject</span>: <span class="pl-st">function</span>(<span class="pl-vpf">config</span>) {
             <span class="pl-k">return</span> config <span class="pl-k">&amp;&amp;</span> <span class="pl-k">!</span>config.ignore;
-        }
+        },
+        useMemoryFs<span class="pl-k">:</span> <span class="pl-c1">true</span>
     };
 
 gulp.task(<span class="pl-s1"><span class="pl-pds">'</span>webpack<span class="pl-pds">'</span></span>, [], <span class="pl-st">function</span>() {
-    <span class="pl-k">return</span> gulp.<span class="pl-sc">src</span>(src <span class="pl-k">+</span> webpack.config.CONFIG_FILENAME)
+    <span class="pl-k">return</span> gulp.<span class="pl-sc">src</span>(path.<span class="pl-s3">join</span>(path.<span class="pl-s3">join</span>(src, <span class="pl-s1"><span class="pl-pds">'</span>**<span class="pl-pds">'</span></span>, webpack.config.CONFIG_FILENAME)), { base<span class="pl-k">:</span> path.resolve(src) })
         .pipe(webpack.<span class="pl-s3">compile</span>(webpackOptions))
         .pipe(webpack.format({
             version<span class="pl-k">:</span> <span class="pl-c1">false</span>,
@@ -86,17 +88,19 @@ gulp.task(<span class="pl-s1"><span class="pl-pds">'</span>webpack<span class="p
 });
 
 gulp.task(<span class="pl-s1"><span class="pl-pds">'</span>watch<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>() {
-    gulp.<span class="pl-s3">watch</span>(src <span class="pl-k">+</span> <span class="pl-s1"><span class="pl-pds">'</span>*.js<span class="pl-pds">'</span></span>).on(<span class="pl-s1"><span class="pl-pds">'</span>change<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">event</span>) {
+    gulp.<span class="pl-s3">watch</span>(path.<span class="pl-s3">join</span>(src, <span class="pl-s1"><span class="pl-pds">'</span>**/*.*<span class="pl-pds">'</span></span>)).on(<span class="pl-s1"><span class="pl-pds">'</span>change<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">event</span>) {
         <span class="pl-k">if</span> (<span class="pl-s3">event</span>.<span class="pl-sc">type</span> <span class="pl-k">===</span> <span class="pl-s1"><span class="pl-pds">'</span>changed<span class="pl-pds">'</span></span>) {
-            webpack.<span class="pl-s3">watch</span>(<span class="pl-s3">event</span>.path, webpackOptions, { base<span class="pl-k">:</span> path.resolve(<span class="pl-s3">event</span>.path) }, <span class="pl-st">function</span>(<span class="pl-vpf">err</span>, <span class="pl-vpf">stats</span>) {
-                gulp.<span class="pl-sc">src</span>(<span class="pl-s3">event</span>.path)
-                    .pipe(webpack.proxy(err, stats))
-                    .pipe(webpack.format({
-                        verbose<span class="pl-k">:</span> <span class="pl-c1">true</span>,
-                        version<span class="pl-k">:</span> <span class="pl-c1">false</span>
-                    }))
-                    .pipe(gulp.dest(dest));
-            });
+            gulp.<span class="pl-sc">src</span>(<span class="pl-s3">event</span>.path, { base<span class="pl-k">:</span> path.resolve(src) })
+                .pipe(webpack.closest())
+                .pipe(webpack.<span class="pl-s3">watch</span>(webpackOptions, <span class="pl-st">function</span>(<span class="pl-vpf">stream</span>, <span class="pl-vpf">err</span>, <span class="pl-vpf">stats</span>) {
+                    stream
+                        .pipe(webpack.proxy(err, stats))
+                        .pipe(webpack.format({
+                            verbose<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+                            version<span class="pl-k">:</span> <span class="pl-c1">false</span>
+                        }))
+                        .pipe(gulp.dest(dest));
+                }));
         }
     });
 });
