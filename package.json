@@ -1,6 +1,6 @@
 {
   "name": "gulp-webpack-build",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "description": "Helps to build bundles based on webpack configs",
   "main": "index.js",
   "scripts": {
@@ -37,7 +37,7 @@
     "memory-fs": "^0.2.0",
     "through2": "^0.6.3",
     "tildify": "^1.0.0",
-    "webpack": "^1.4.13",
+    "webpack": "^1.5.3",
     "webpack-config": "^0.1.7"
   }
 }
