@@ -40,6 +40,12 @@ function isConfigObject(config) {
 
 Uses a new `Function` to override this behavior.
 
+##### options.useMemoryFs
+Type: `Boolean`
+Default: `false`
+
+Uses [memory-fs](https://github.com/webpack/memory-fs) for `compiler.outputFileSystem`. Prevents to write emitted files to file system. `gulp.dest` can be used.
+
 #### callback(err, stats)
 Type: `Function`
 
@@ -87,14 +93,13 @@ Default: `false`
 
 Fails build if some `stats` objects have some warnings.
 
-### webpack.watch(filename, options[, globOptions], callback)
+### webpack.closest
 
-Starts watching `filename` for changes via `webpack.watch` and re-emits all data passed from `webpack.watch`.
+Finds closest `webpack.config.js` file and need to be used together with `webpack.watch`. Can be piped.
 
-#### filename
-Type: `String`
+### webpack.watch(options, callback)
 
-Used to find closest `webpack.config.js` file.
+Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.watch`. Re-emits all data passed from `webpack.watch`. Can be piped.
 
 #### options
 Type: `Object`
@@ -132,15 +137,21 @@ function isConfigObject(config) {
 
 Uses a new `Function` to override this behavior.
 
-#### globOptions
-Type: `Object`
+##### options.useMemoryFs
+Type: `Boolean`
+Default: `false`
 
-Options to pass to [node-glob](https://github.com/isaacs/node-glob) through [glob-stream](https://github.com/wearefractal/glob-stream).
+Uses [memory-fs](https://github.com/webpack/memory-fs) for `compiler.outputFileSystem`. Prevents to write emitted files to file system. `gulp.dest` can be used.
 
-#### callback(err, stats)
+#### callback(stream, err, stats)
 Type: `Function`
 
-Called when each `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
+Called when each `webpack.config.js` file is compiled. Will be passed `stream`, `err` and `stats` objects.
+
+##### callback.stream
+Type: `Stream`
+
+Please see [vinyl-fs](https://github.com/wearefractal/vinyl-fs).
 
 ##### callback.err
 Type: `Error`

@@ -11,21 +11,23 @@ var path = require('path'),
     gulp = require('gulp'),
     webpack = require('gulp-webpack-build');
 
-var src = './src/**/',
+var src = './src',
     dest = './dist',
     webpackOptions = {
         debug: true,
         devtool: '#source-map',
+        watchDelay: 200,
         isConfigFile: function(file) {
             return file && file.path.indexOf(webpack.config.CONFIG_FILENAME) >= 0;
         },
         isConfigObject: function(config) {
             return config && !config.ignore;
-        }
+        },
+        useMemoryFs: true
     };
 
 gulp.task('webpack', [], function() {
-    return gulp.src(src + webpack.config.CONFIG_FILENAME)
+    return gulp.src(path.join(path.join(src, '**', webpack.config.CONFIG_FILENAME)), { base: path.resolve(src) })
         .pipe(webpack.compile(webpackOptions))
         .pipe(webpack.format({
             version: false,
@@ -39,17 +41,19 @@ gulp.task('webpack', [], function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch(src + '*.js').on('change', function(event) {
+    gulp.watch(path.join(src, '**/*.*')).on('change', function(event) {
         if (event.type === 'changed') {
-            webpack.watch(event.path, webpackOptions, { base: path.resolve(event.path) }, function(err, stats) {
-                gulp.src(event.path)
-                    .pipe(webpack.proxy(err, stats))
-                    .pipe(webpack.format({
-                        verbose: true,
-                        version: false
-                    }))
-                    .pipe(gulp.dest(dest));
-            });
+            gulp.src(event.path, { base: path.resolve(src) })
+                .pipe(webpack.closest())
+                .pipe(webpack.watch(webpackOptions, function(stream, err, stats) {
+                    stream
+                        .pipe(webpack.proxy(err, stats))
+                        .pipe(webpack.format({
+                            verbose: true,
+                            version: false
+                        }))
+                        .pipe(gulp.dest(dest));
+                }));
         }
     });
 });
@@ -91,6 +95,12 @@ function isConfigObject(config) {
 ```
 
 Uses a new `Function` to override this behavior.
+
+##### options.useMemoryFs
+Type: `Boolean`
+Default: `false`
+
+Uses [memory-fs](https://github.com/webpack/memory-fs) for `compiler.outputFileSystem`. Prevents to write emitted files to file system. `gulp.dest` can be used.
 
 #### callback(err, stats)
 Type: `Function`
@@ -139,14 +149,13 @@ Default: `false`
 
 Fails build if some `stats` objects have some warnings.
 
-### webpack.watch(filename, options[, globOptions], callback)
+### webpack.closest
 
-Starts watching `filename` for changes via `webpack.watch` and re-emits all data passed from `webpack.watch`.
+Finds closest `webpack.config.js` file and need to be used together with `webpack.watch`. Can be piped.
 
-#### filename
-Type: `String`
+### webpack.watch(options, callback)
 
-Used to find closest `webpack.config.js` file.
+Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.watch`. Re-emits all data passed from `webpack.watch`. Can be piped.
 
 #### options
 Type: `Object`
@@ -184,15 +193,21 @@ function isConfigObject(config) {
 
 Uses a new `Function` to override this behavior.
 
-#### globOptions
-Type: `Object`
+##### options.useMemoryFs
+Type: `Boolean`
+Default: `false`
 
-Options to pass to [node-glob](https://github.com/isaacs/node-glob) through [glob-stream](https://github.com/wearefractal/glob-stream).
+Uses [memory-fs](https://github.com/webpack/memory-fs) for `compiler.outputFileSystem`. Prevents to write emitted files to file system. `gulp.dest` can be used.
 
-#### callback(err, stats)
+#### callback(stream, err, stats)
 Type: `Function`
 
-Called when each `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
+Called when each `webpack.config.js` file is compiled. Will be passed `stream`, `err` and `stats` objects.
+
+##### callback.stream
+Type: `Stream`
+
+Please see [vinyl-fs](https://github.com/wearefractal/vinyl-fs).
 
 ##### callback.err
 Type: `Error`

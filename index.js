@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path'),
+    fs = require('fs'),
     through = require('through2'),
     tildify = require('tildify'),
     gulp = require('gulp'),
@@ -36,44 +37,43 @@ function wrapError(err) {
     return new gutil.PluginError(PLUGIN_NAME, err);
 }
 
-function getFiles(stats) {
-    var files = [];
+function getOutputFs(outputFs) {
+    return !util.isMemoryFs(outputFs) ? fs : outputFs;
+}
 
-    if (stats) {
-        var compilation = stats.compilation,
-            assets = compilation.assets || {},
-            compiler = compilation.compiler,
-            fs = compiler.outputFileSystem,
-            file = compilation.options.file;
+function getFiles(chunk, stats) {
+    if (!util.isStats(stats)) { return []; }
 
-        return Object.keys(assets).map(function(name) {
-            var emitted = assets[name].emitted === true;
+    var compilation = stats.compilation,
+        assets = compilation.assets || {},
+        compiler = compilation.compiler,
+        outputFs = getOutputFs(compiler.outputFileSystem);
 
-            if (emitted) {
-                var outputPath = fs.join(compiler.outputPath, name),
-                    base = path.resolve(outputPath, file.base),
-                    contents = fs.readFileSync(outputPath);
+    return Object.keys(assets).filter(function(name) {
+        var asset = assets[name];
 
-                return new gutil.File({
-                    base: base,
-                    path: outputPath,
-                    contents: contents
-                });
-            }
-        }).filter(function(file) {
-            return util.isDefined(file);
-        }).map(function(file) {
-            file.stats = stats;
+        return asset && asset.emitted === true;
+    }).map(function(name) {
+        var asset = assets[name],
+            filename = asset.existsAt,
+            base = path.resolve(filename, chunk.base),
+            contents = outputFs.readFileSync(filename),
+            file = new gutil.File({
+                base: base,
+                path: filename,
+                contents: contents
+            });
 
-            return file;
-        });
-    }
+        file.stats = stats;
 
-    return files;
+        return file;
+    });
 }
 
 function processStats(chunk, stats) {
-    var files = getFiles(stats);
+    if (!util.isStats(stats)) { return; }
+
+    var files = getFiles(chunk, stats);
 
     if (files.length > 0) {
         files.forEach(function(file) {
@@ -123,9 +123,9 @@ function format(options) {
     return through.obj(function(chunk, enc, callback) {
         var stats = chunk.stats;
 
-        if (cache && cache.indexOf(stats) < 0) {
+        if (util.isStats(stats) && cache.indexOf(stats) < 0) {
             var compilation = stats.compilation,
-                filename = path.resolve(compilation.options.file.path);
+                filename = path.resolve(compilation.options.config.filename);
 
             cache.push(stats);
 
@@ -145,7 +145,7 @@ function failAfter(options) {
     return through.obj(function(chunk, enc, cb) {
         var stats = chunk.stats;
 
-        if (stats && cache.indexOf(stats) < 0) {
+        if (util.isStats(stats) && cache.indexOf(stats) < 0) {
             cache.push(stats);
         }
 
@@ -172,32 +172,44 @@ function failAfter(options) {
     });
 }
 
+function closest() {
+    return through.obj(function(chunk, enc, cb) {
+        var filename = WebpackConfig.closest(chunk.path);
+
+        if (filename) {
+            this.push(new gutil.File({
+                path: filename,
+                base: chunk.base
+            }));
+        }
+
+        cb();
+    });
+}
+
 var watchers = {};
 
-function watch(filename, options, globOptions, callback) {
+function watch(options, callback) {
     if (!util.isObject(options)) { options = {}; }
-    if (util.isFunction(globOptions)) { callback = globOptions; }
-    if (!util.isObject(globOptions)) { globOptions = {}; }
     if (!util.isFunction(callback)) { callback = function() {}; }
 
     options.watch = true;
 
-    var src = WebpackConfig.closest(filename);
+    return through.obj(function(chunk, enc, cb) {
+        if (!watchers[chunk.path]) {
+            gutil.log('Watching webpack config', gutil.colors.magenta(tildify(chunk.path)));
 
-    gulp.src(src, globOptions)
-        .pipe(through.obj(function(chunk, enc, cb) {
-            if (!watchers[chunk.path]) {
-                gutil.log('Watching webpack config', gutil.colors.magenta(tildify(src)));
+            var compiler = new Compiler(options);
 
-                var compiler = new Compiler(options);
+            watchers[chunk.path] = compiler.watch(chunk, function(err, stats) {
+                var stream = gulp.src(chunk.path, { base: chunk.base });
 
-                watchers[chunk.path] = compiler.watch(chunk, function(err, stats) {
-                    callback(err, stats);
-                });
-            }
+                callback(stream, err, stats);
+            });
+        }
 
-            cb();
-        }));
+        cb();
+    });
 }
 
 function proxy(err, stats) {
@@ -214,6 +226,7 @@ module.exports = {
     compile: compile,
     format: format,
     failAfter: failAfter,
+    closest: closest,
     watch: watch,
     proxy: proxy,
     core: webpack,
