@@ -239,4 +239,4 @@ Alias for [webpack](http://webpack.github.io/docs/node.js-api.html).
 
 Read-only property.
 
-Alias for [webpack-config](http://mdreizin.github.io/webpack-config). Read-only.
+Alias for [webpack-config](http://mdreizin.github.io/webpack-config).
