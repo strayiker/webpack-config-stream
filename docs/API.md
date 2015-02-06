@@ -1,7 +1,3 @@
-<!--
-This file has been generated using Gitdown (https://github.com/gajus/gitdown).
-Direct edits to this will be be overwritten. Look for Gitdown markup file under ./.gitdown/ path.
--->
 ## gulp-webpack-build API docs
 
 ``` javascript
