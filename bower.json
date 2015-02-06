@@ -2,7 +2,7 @@
   "name": "gulp-webpack-build",
   "private": true,
   "main": "index.js",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "authors": [
     "Marat Dreizin <marat.dreizin@gmail.com>"
   ],
