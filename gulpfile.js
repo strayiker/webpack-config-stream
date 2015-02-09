@@ -77,7 +77,7 @@ gulp.task('gitdown:readme', function() {
     return Gitdown.read('.gitdown/README.md').write('README.md');
 });
 
-gulp.task('gitdown:docs:api', function() {
+gulp.task('gitdown:api', function() {
     var gitdown = Gitdown.read('.gitdown/docs/API.md');
 
     gitdown.config.headingNesting.enabled = false;
@@ -86,7 +86,7 @@ gulp.task('gitdown:docs:api', function() {
 });
 
 gulp.task('gitdown', function(callback) {
-    runSequence('gitdown:readme', 'gitdown:docs:api', callback);
+    runSequence('gitdown:readme', 'gitdown:api', callback);
 });
 
 gulp.task('docs', ['gitdown']);
