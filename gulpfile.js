@@ -27,7 +27,8 @@ var src = './test/fixtures',
         isConfigObject: function(config) {
             return config && !config.ignore;
         },
-        useMemoryFs: true
+        useMemoryFs: true,
+        progress: true
     };
 
 gulp.task('lint', function() {

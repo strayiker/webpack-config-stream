@@ -47,6 +47,12 @@ Default: `false`
 Uses [memory-fs](https://github.com/webpack/memory-fs) for `compiler.outputFileSystem`. Prevents writing of emitted files to file system. `gulp.dest` can be used.
 `gulp.dest` is resolved relative to [output.path](https://github.com/webpack/docs/wiki/configuration#outputpath) if it is set; otherwise, it is resolved relative to [options.base](https://github.com/gulpjs/gulp/blob/master/docs/API.md#optionsbase) (by default, the path of `Gulpfile.js`).
 
+##### options.progress
+Type: `Boolean`
+Default: `false`
+
+Adds ability to track compilation progress.
+
 #### callback(err, stats)
 Type: `Function`
 
@@ -143,6 +149,12 @@ Type: `Boolean`
 Default: `false`
 
 Uses [memory-fs](https://github.com/webpack/memory-fs) for `compiler.outputFileSystem`. Prevents to write emitted files to file system. `gulp.dest` can be used.
+
+##### options.progress
+Type: `Boolean`
+Default: `false`
+
+Adds ability to track compilation progress.
 
 #### callback(stream, err, stats)
 Type: `Function`

@@ -86,11 +86,27 @@ function processStats(chunk, stats) {
     }
 }
 
+function progressCallback(p, msg) {
+    var percentage = Math.floor(p * 100) + '%';
+
+    if (p === 0) {
+        var filename = path.resolve(this.options.config.filename);
+
+        gutil.log('Progress for webpack config', gutil.colors.magenta(tildify(filename)));
+    }
+
+    gutil.log(percentage, gutil.colors.grey(msg));
+}
+
 function getOptions(options, watch) {
     if (!util.isObject(options)) { options = {}; }
 
     if (watch === false) {
         delete options.watch;
+    }
+
+    if (options.progress === true) {
+        options.progress = progressCallback;
     }
 
     return options;

@@ -16,7 +16,8 @@ var src = './src',
         isConfigObject: function(config) {
             return config && !config.ignore;
         },
-        useMemoryFs: true
+        useMemoryFs: true,
+        progress: true
     };
 
 gulp.task('webpack', [], function() {
