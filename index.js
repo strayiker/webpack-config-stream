@@ -86,11 +86,20 @@ function processStats(chunk, stats) {
     }
 }
 
-function compile(options, callback) {
+function getOptions(options, watch) {
     if (!util.isObject(options)) { options = {}; }
+
+    if (watch === false) {
+        delete options.watch;
+    }
+
+    return options;
+}
+
+function compile(options, callback) {
     if (!util.isFunction(callback)) { callback = function() {}; }
 
-    delete options.watch;
+    options = getOptions(options, false);
 
     return through.obj(function(chunk, enc, cb) {
         var compiler = new Compiler(options);
@@ -190,10 +199,9 @@ function closest() {
 var watchers = {};
 
 function watch(options, callback) {
-    if (!util.isObject(options)) { options = {}; }
     if (!util.isFunction(callback)) { callback = function() {}; }
 
-    options.watch = true;
+    options = getOptions(options, true);
 
     return through.obj(function(chunk, enc, cb) {
         if (!watchers[chunk.path]) {
