@@ -1,13 +1,6 @@
 {
   "name": "gulp-webpack-build",
   "private": true,
-  "main": "index.js",
-  "version": "0.3.1",
-  "authors": [
-    "Marat Dreizin <marat.dreizin@gmail.com>"
-  ],
-  "license": "MIT",
-  "homepage": "https://github.com/mdreizin/gulp-webpack-build",
   "ignore": [
     "**/.*",
     "node_modules",
