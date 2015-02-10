@@ -129,7 +129,7 @@ function format(options) {
 
             cache.push(stats);
 
-            gutil.log('Compiling webpack config', gutil.colors.magenta(tildify(filename)));
+            gutil.log('Stats for webpack config', gutil.colors.magenta(tildify(filename)));
             gutil.log('\n' + stats.toString(statsOptions));
         }
 
