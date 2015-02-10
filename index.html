@@ -28,9 +28,7 @@
         </ul>
       </header>
       <section>
-        
-
-<p><a href="https://www.npmjs.org/package/gulp-webpack-build"><img src="http://img.shields.io/npm/v/gulp-webpack-build.svg?style=flat" alt="NPM version"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build"><img src="https://david-dm.org/mdreizin/gulp-webpack-build.svg?style=flat" alt="Dependency Status"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build#info=devDependencies"><img src="https://david-dm.org/mdreizin/gulp-webpack-build/dev-status.svg?style=flat" alt="Dependency Status"></a></p>
+        <p><a href="https://www.npmjs.org/package/gulp-webpack-build"><img src="http://img.shields.io/npm/v/gulp-webpack-build.svg?style=flat" alt="NPM version"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build"><img src="https://david-dm.org/mdreizin/gulp-webpack-build.svg?style=flat" alt="Dependency Status"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build#info=devDependencies"><img src="https://david-dm.org/mdreizin/gulp-webpack-build/dev-status.svg?style=flat" alt="Dependency Status"></a></p>
 
 <p><a href="https://nodei.co/npm/gulp-webpack-build/"><img src="https://nodei.co/npm/gulp-webpack-build.png?downloads=true&amp;stars=true" alt="NPM"></a></p>
 
@@ -70,7 +68,8 @@
         <span class="pl-en">isConfigObject</span>: <span class="pl-st">function</span>(<span class="pl-vpf">config</span>) {
             <span class="pl-k">return</span> config <span class="pl-k">&amp;&amp;</span> <span class="pl-k">!</span>config.ignore;
         },
-        useMemoryFs<span class="pl-k">:</span> <span class="pl-c1">true</span>
+        useMemoryFs<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+        progress<span class="pl-k">:</span> <span class="pl-c1">true</span>
     };
 
 gulp.task(<span class="pl-s1"><span class="pl-pds">'</span>webpack<span class="pl-pds">'</span></span>, [], <span class="pl-st">function</span>() {
