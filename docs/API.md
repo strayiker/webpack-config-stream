@@ -218,6 +218,10 @@ Called when each `webpack.config.js` file is compiled. Will be passed `stream`, 
 ##### callback.stream
 Type: `Stream`
 
+`webpack.watch` creates a new stream to be able to use existing pipes every time when you change some dependencies of `webpack.config.js` file.
+
+It is equivalent to `gulp.src(chunk.path, { base: chunk.base })` where `chunk` is stream of actual `webpack.config.js` file.
+
 Please see [vinyl-fs](https://github.com/wearefractal/vinyl-fs).
 
 ##### callback.err
