@@ -79,7 +79,7 @@ function processStats(chunk, stats) {
         files.forEach(function(file) {
             this.push(file);
         }, this);
-    } else if (stats.hasErrors() || stats.hasWarnings()) {
+    } else {
         chunk.stats = stats;
 
         this.push(chunk);
