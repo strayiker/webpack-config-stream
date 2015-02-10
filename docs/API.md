@@ -96,7 +96,8 @@ Uses a new `Function` to override this behavior.
 Type: `Boolean`
 Default: `false`
 
-Uses [memory-fs](https://github.com/webpack/memory-fs) for `compiler.outputFileSystem`. Prevents to write emitted files to file system. `gulp.dest` can be used.
+Uses [memory-fs](https://github.com/webpack/memory-fs) for `compiler.outputFileSystem`. Prevents writing of emitted files to file system. `gulp.dest` can be used.
+`gulp.dest` is resolved relative to [output.path](https://github.com/webpack/docs/wiki/configuration#outputpath) if it is set; otherwise, it is resolved relative to [options.base](https://github.com/gulpjs/gulp/blob/master/docs/API.md#optionsbase) (by default, the path of `Gulpfile.js`).
 
 #### callback(err, stats)
 Type: `Function`
@@ -147,7 +148,7 @@ Fails build if some `stats` objects have some warnings.
 
 ### webpack.closest
 
-Finds closest `webpack.config.js` file. Needs to be used together with `webpack.watch`. Can be piped.
+For each file returned by `gulp.src()`, finds the closest `webpack.config.js` file (searching the directory as well as its ancestors). Needs to be used together with `webpack.watch`. Can be piped.
 
 ### webpack.watch(options, callback)
 
