@@ -220,16 +220,30 @@ function watch(options, callback) {
     options = getOptions(options, true);
 
     return through.obj(function(chunk, enc, cb) {
+        var stat = fs.statSync(chunk.path),
+            watcher = watchers[chunk.path],
+            isDirty = watcher && watcher.compiler.options.config.modifiedTime < stat.mtime;
+
+        if (isDirty === true) {
+            delete watchers[chunk.path];
+        }
+
         if (!watchers[chunk.path]) {
-            gutil.log('Watching webpack config', gutil.colors.magenta(tildify(chunk.path)));
+            gutil.log('Waiting changes for webpack config', gutil.colors.magenta(tildify(chunk.path)));
 
             var adapter = new CompilerAdapter(options);
 
-            watchers[chunk.path] = adapter.watch(chunk, function(err, stats) {
+            watcher = adapter.watch(chunk, function(err, stats) {
                 var stream = gulp.src(chunk.path, { base: chunk.base });
 
                 callback(stream, err, stats);
             });
+
+            if (watcher) {
+                watcher.compiler.options.config.modifiedTime = stat.mtime;
+
+                watchers[chunk.path] = watcher;
+            }
         }
 
         cb();
