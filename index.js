@@ -9,7 +9,7 @@ var path = require('path'),
     defaults = require('defaults'),
     webpack = require('webpack'),
     WebpackConfig = require('webpack-config'),
-    Compiler = require('./lib/compiler'),
+    CompilerAdapter = require('./lib/compilerAdapter'),
     util = require('./lib/util');
 
 var PLUGIN_NAME = 'gulp-webpack-build',
@@ -118,9 +118,9 @@ function compile(options, callback) {
     options = getOptions(options, false);
 
     return through.obj(function(chunk, enc, cb) {
-        var compiler = new Compiler(options);
+        var adapter = new CompilerAdapter(options);
 
-        var result = compiler.run(chunk, function(err, stats) {
+        var compiler = adapter.run(chunk, function(err, stats) {
             processStats.call(this, chunk, stats);
 
             if (err) { this.emit('error', wrapError(err)); }
@@ -129,7 +129,7 @@ function compile(options, callback) {
             callback(err, stats);
         }.bind(this));
 
-        if (!result) {
+        if (util.isUndefined(compiler)) {
             cb();
         }
     });
@@ -223,9 +223,9 @@ function watch(options, callback) {
         if (!watchers[chunk.path]) {
             gutil.log('Watching webpack config', gutil.colors.magenta(tildify(chunk.path)));
 
-            var compiler = new Compiler(options);
+            var adapter = new CompilerAdapter(options);
 
-            watchers[chunk.path] = compiler.watch(chunk, function(err, stats) {
+            watchers[chunk.path] = adapter.watch(chunk, function(err, stats) {
                 var stream = gulp.src(chunk.path, { base: chunk.base });
 
                 callback(stream, err, stats);
