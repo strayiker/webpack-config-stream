@@ -3,42 +3,13 @@
 ``` javascript
 {"gitdown": "include", "file": "samples/gulpfile.js"}
 ```
-### webpack.compile(options[, callback])
 
-Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.run`. Re-emits all data passed from `webpack.run`. Can be piped.
+### webpack.configure(options)
+
+Helps to configure `webpack` compiler. Can be piped.
 
 #### options
 Type: `Object`
-
-Overrides existing properties of each `webpack.config.js` file.
-
-Please see [configuration](http://webpack.github.io/docs/configuration.html#configuration-object-content).
-
-##### options.isConfigFile(file)
-Type: `Function`
-
-By default this plugin uses the following function to filter `webpack.config.js` [`files`](https://github.com/wearefractal/vinyl):
-
-```
-function isConfigFile(file) {
-    return file && file.path.indexOf(WebpackConfig.CONFIG_FILENAME) >= 0;
-}
-```
-
-Uses a new `Function` to override this behavior.
-
-##### options.isConfigObject(config)
-Type: `Function`
-
-By default this plugin uses the following function to filter webpack [`configuration`](http://webpack.github.io/docs/configuration.html#configuration-object-content) objects:
-
-```
-function isConfigObject(config) {
-    return config != null && typeof config === 'object';
-}
-```
-
-Uses a new `Function` to override this behavior.
 
 ##### options.useMemoryFs
 Type: `Boolean`
@@ -53,10 +24,30 @@ Default: `false`
 
 Adds ability to track compilation progress.
 
+### webpack.overrides(options)
+
+Overrides existing properties of each `webpack.config.js` file. Can be piped.
+
+#### options
+Type: `Object`
+
+Please see [configuration](http://webpack.github.io/docs/configuration.html#configuration-object-content).
+
+### webpack.compile(callback)
+
+Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.run`. Re-emits all data passed from `webpack.run`. Can be piped.
+
+**Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
+
 #### callback(err, stats)
 Type: `Function`
 
 Called when each `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
+
+##### callback execution context (`this`)
+Type: `Stream`
+
+Original reference to `gulp.src(path.join(path.join(src, '**', CONFIG_FILENAME)), { base: path.resolve(src) })`.
 
 ##### callback.err
 Type: `Error`
@@ -100,76 +91,33 @@ Default: `false`
 
 Fails build if some `stats` objects have some warnings.
 
-### webpack.closest
+### webpack.closest([basename])
 
-For each file returned by `gulp.src()`, finds the closest `webpack.config.js` file (searching the directory as well as its ancestors). Needs to be used together with `webpack.watch`. Can be piped.
+For each file returned by `gulp.src()`, finds the closest `webpack.config.js` file (searching the directory as well as its ancestors). Can be piped.
 
-### webpack.watch(options, callback)
+**Note**: Needs to be used together with `webpack.watch`.
+
+#### basename
+Type: `String`
+Default: `webpack.config.js`
+
+The name of config file.
+
+### webpack.watch(callback)
 
 Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.watch`. Re-emits all data passed from `webpack.watch`. Can be piped.
 
-#### options
-Type: `Object`
+**Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
 
-Please see [configuration](http://webpack.github.io/docs/configuration.html#configuration-object-content).
-
-#### options.watchDelay
-Type: `Integer`
-
-Please see [`watchDelay`](http://webpack.github.io/docs/configuration.html#watchdelay).
-
-##### options.isConfigFile(file)
+#### callback(err, stats)
 Type: `Function`
 
-By default this plugin uses the following function to filter `webpack.config.js` [`files`](https://github.com/wearefractal/vinyl):
+Called when each `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
 
-```
-function isConfigFile(file) {
-    return file && file.path.indexOf(WebpackConfig.CONFIG_FILENAME) >= 0;
-}
-```
-
-Uses a new `Function` to override this behavior.
-
-##### options.isConfigObject(config)
-Type: `Function`
-
-By default this plugin uses the following function to filter webpack [`configuration`](http://webpack.github.io/docs/configuration.html#configuration-object-content) objects:
-
-```
-function isConfigObject(config) {
-    return config != null && typeof config === 'object';
-}
-```
-
-Uses a new `Function` to override this behavior.
-
-##### options.useMemoryFs
-Type: `Boolean`
-Default: `false`
-
-Uses [memory-fs](https://github.com/webpack/memory-fs) for `compiler.outputFileSystem`. Prevents writing of emitted files to file system. `gulp.dest` can be used.
-`gulp.dest` is resolved relative to [output.path](https://github.com/webpack/docs/wiki/configuration#outputpath) if it is set; otherwise, it is resolved relative to [options.base](https://github.com/gulpjs/gulp/blob/master/docs/API.md#optionsbase) (by default, the path of `gulpfile.js`).
-
-##### options.progress
-Type: `Boolean`
-Default: `false`
-
-Adds ability to track compilation progress.
-
-#### callback(stream, err, stats)
-Type: `Function`
-
-Called when each `webpack.config.js` file is compiled. Will be passed `stream`, `err` and `stats` objects.
-
-##### callback.stream
+##### callback execution context (`this`)
 Type: `Stream`
 
-`webpack.watch` creates a new stream to be able to use existing pipes every time when you change some dependencies of `webpack.config.js` file.
-
-It is equivalent to `gulp.src(chunk.path, { base: chunk.base })` where `chunk` is stream of actual `webpack.config.js` file.
-
-Please see [vinyl-fs](https://github.com/wearefractal/vinyl-fs).
+Original reference to `gulp.src(event.path, { base: path.resolve(src) })`.
 
 ##### callback.err
 Type: `Error`

@@ -9,20 +9,19 @@ var src = './src',
     webpackOptions = {
         debug: true,
         devtool: '#source-map',
-        watchDelay: 200,
-        isConfigFile: function(file) {
-            return file && file.path.indexOf(webpack.config.CONFIG_FILENAME) >= 0;
-        },
-        isConfigObject: function(config) {
-            return config && !config.ignore;
-        },
+        watchDelay: 200
+    },
+    webpackConfig = {
         useMemoryFs: true,
         progress: true
-    };
+    },
+    CONFIG_FILENAME = webpack.config.CONFIG_FILENAME;
 
 gulp.task('webpack', [], function() {
-    return gulp.src(path.join(path.join(src, '**', webpack.config.CONFIG_FILENAME)), { base: path.resolve(src) })
-        .pipe(webpack.compile(webpackOptions))
+    return gulp.src(path.join(path.join(src, '**', CONFIG_FILENAME)), { base: path.resolve(src) })
+        .pipe(webpack.configure(webpackConfig))
+        .pipe(webpack.overrides(webpackOptions))
+        .pipe(webpack.compile())
         .pipe(webpack.format({
             version: false,
             timings: true
@@ -38,9 +37,11 @@ gulp.task('watch', function() {
     gulp.watch(path.join(src, '**/*.*')).on('change', function(event) {
         if (event.type === 'changed') {
             gulp.src(event.path, { base: path.resolve(src) })
-                .pipe(webpack.closest())
-                .pipe(webpack.watch(webpackOptions, function(stream, err, stats) {
-                    stream
+                .pipe(webpack.closest(CONFIG_FILENAME))
+                .pipe(webpack.configure(webpackConfig))
+                .pipe(webpack.overrides(webpackOptions))
+                .pipe(webpack.watch(function(err, stats) {
+                    gulp.src(this.path, { base: this.base })
                         .pipe(webpack.proxy(err, stats))
                         .pipe(webpack.format({
                             verbose: true,

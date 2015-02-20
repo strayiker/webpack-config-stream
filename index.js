@@ -98,12 +98,18 @@ function progressCallback(p, msg) {
     gutil.log(percentage, gutil.colors.grey(msg));
 }
 
-function getOptions(options, watch) {
-    if (!util.isObject(options)) { options = {}; }
+function getWebpackOptions(chunk, watch) {
+    var options = chunk.webpackOptions || {};
 
     if (watch === false) {
         delete options.watch;
     }
+
+    return options;
+}
+
+function getCompilerOptions(chunk) {
+    var options = chunk.compilerOptions || {};
 
     if (options.progress === true) {
         options.progress = progressCallback;
@@ -112,13 +118,13 @@ function getOptions(options, watch) {
     return options;
 }
 
-function compile(options, callback) {
+function compile(callback) {
     if (!util.isFunction(callback)) { callback = function() {}; }
 
-    options = getOptions(options, false);
-
     return through.obj(function(chunk, enc, cb) {
-        var adapter = new CompilerAdapter(options);
+        var webpackOptions = getWebpackOptions(chunk, false),
+            compilerOptions = getCompilerOptions(chunk),
+            adapter = new CompilerAdapter(webpackOptions, compilerOptions);
 
         var compiler = adapter.run(chunk, function(err, stats) {
             processStats.call(this, chunk, stats);
@@ -126,7 +132,7 @@ function compile(options, callback) {
             if (err) { this.emit('error', wrapError(err)); }
 
             cb(err);
-            callback(err, stats);
+            callback.apply(chunk, [err, stats]);
         }.bind(this));
 
         if (util.isUndefined(compiler)) {
@@ -197,9 +203,9 @@ function failAfter(options) {
     });
 }
 
-function closest() {
+function closest(basename) {
     return through.obj(function(chunk, enc, cb) {
-        var filename = WebpackConfig.closest(chunk.path);
+        var filename = WebpackConfig.closest(chunk.path, basename);
 
         if (filename) {
             this.push(new gutil.File({
@@ -214,10 +220,8 @@ function closest() {
 
 var watchers = {};
 
-function watch(options, callback) {
+function watch(callback) {
     if (!util.isFunction(callback)) { callback = function() {}; }
-
-    options = getOptions(options, true);
 
     return through.obj(function(chunk, enc, cb) {
         var stat = fs.statSync(chunk.path),
@@ -231,12 +235,12 @@ function watch(options, callback) {
         if (!watchers[chunk.path]) {
             gutil.log('Waiting changes for webpack config', gutil.colors.magenta(tildify(chunk.path)));
 
-            var adapter = new CompilerAdapter(options);
+            var webpackOptions = getWebpackOptions(chunk, false),
+                compilerOptions = getCompilerOptions(chunk),
+                adapter = new CompilerAdapter(webpackOptions, compilerOptions);
 
             watcher = adapter.watch(chunk, function(err, stats) {
-                var stream = gulp.src(chunk.path, { base: chunk.base });
-
-                callback(stream, err, stats);
+                callback.apply(chunk, [err, stats]);
             });
 
             if (watcher) {
@@ -260,6 +264,26 @@ function proxy(err, stats) {
     });
 }
 
+function overrides(options) {
+    if (!util.isObject(options)) { options = {}; }
+
+    return through.obj(function(chunk, enc, cb) {
+        chunk.webpackOptions = options;
+
+        cb(null, chunk);
+    });
+}
+
+function configure(options) {
+    if (!util.isObject(options)) { options = {}; }
+
+    return through.obj(function(chunk, enc, cb) {
+        chunk.compilerOptions = options;
+
+        cb(null, chunk);
+    });
+}
+
 module.exports = {
     compile: compile,
     format: format,
@@ -267,6 +291,8 @@ module.exports = {
     closest: closest,
     watch: watch,
     proxy: proxy,
+    overrides: overrides,
+    configure: configure,
     core: webpack,
     config: WebpackConfig
 };
