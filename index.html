@@ -61,20 +61,19 @@
     webpackOptions <span class="pl-k">=</span> {
         debug<span class="pl-k">:</span> <span class="pl-c1">true</span>,
         devtool<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>#source-map<span class="pl-pds">'</span></span>,
-        watchDelay<span class="pl-k">:</span> <span class="pl-c1">200</span>,
-        <span class="pl-en">isConfigFile</span>: <span class="pl-st">function</span>(<span class="pl-vpf">file</span>) {
-            <span class="pl-k">return</span> file <span class="pl-k">&amp;&amp;</span> file.path.<span class="pl-s3">indexOf</span>(webpack.config.CONFIG_FILENAME) <span class="pl-k">&gt;=</span> <span class="pl-c1">0</span>;
-        },
-        <span class="pl-en">isConfigObject</span>: <span class="pl-st">function</span>(<span class="pl-vpf">config</span>) {
-            <span class="pl-k">return</span> config <span class="pl-k">&amp;&amp;</span> <span class="pl-k">!</span>config.ignore;
-        },
+        watchDelay<span class="pl-k">:</span> <span class="pl-c1">200</span>
+    },
+    webpackConfig <span class="pl-k">=</span> {
         useMemoryFs<span class="pl-k">:</span> <span class="pl-c1">true</span>,
         progress<span class="pl-k">:</span> <span class="pl-c1">true</span>
-    };
+    },
+    CONFIG_FILENAME <span class="pl-k">=</span> webpack.config.CONFIG_FILENAME;
 
 gulp.task(<span class="pl-s1"><span class="pl-pds">'</span>webpack<span class="pl-pds">'</span></span>, [], <span class="pl-st">function</span>() {
-    <span class="pl-k">return</span> gulp.<span class="pl-sc">src</span>(path.<span class="pl-s3">join</span>(path.<span class="pl-s3">join</span>(src, <span class="pl-s1"><span class="pl-pds">'</span>**<span class="pl-pds">'</span></span>, webpack.config.CONFIG_FILENAME)), { base<span class="pl-k">:</span> path.resolve(src) })
-        .pipe(webpack.<span class="pl-s3">compile</span>(webpackOptions))
+    <span class="pl-k">return</span> gulp.<span class="pl-sc">src</span>(path.<span class="pl-s3">join</span>(path.<span class="pl-s3">join</span>(src, <span class="pl-s1"><span class="pl-pds">'</span>**<span class="pl-pds">'</span></span>, CONFIG_FILENAME)), { base<span class="pl-k">:</span> path.resolve(src) })
+        .pipe(webpack.configure(webpackConfig))
+        .pipe(webpack.overrides(webpackOptions))
+        .pipe(webpack.<span class="pl-s3">compile</span>())
         .pipe(webpack.format({
             version<span class="pl-k">:</span> <span class="pl-c1">false</span>,
             timings<span class="pl-k">:</span> <span class="pl-c1">true</span>
@@ -90,9 +89,11 @@ gulp.task(<span class="pl-s1"><span class="pl-pds">'</span>watch<span class="pl-
     gulp.<span class="pl-s3">watch</span>(path.<span class="pl-s3">join</span>(src, <span class="pl-s1"><span class="pl-pds">'</span>**/*.*<span class="pl-pds">'</span></span>)).on(<span class="pl-s1"><span class="pl-pds">'</span>change<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">event</span>) {
         <span class="pl-k">if</span> (<span class="pl-s3">event</span>.<span class="pl-sc">type</span> <span class="pl-k">===</span> <span class="pl-s1"><span class="pl-pds">'</span>changed<span class="pl-pds">'</span></span>) {
             gulp.<span class="pl-sc">src</span>(<span class="pl-s3">event</span>.path, { base<span class="pl-k">:</span> path.resolve(src) })
-                .pipe(webpack.closest())
-                .pipe(webpack.<span class="pl-s3">watch</span>(webpackOptions, <span class="pl-st">function</span>(<span class="pl-vpf">stream</span>, <span class="pl-vpf">err</span>, <span class="pl-vpf">stats</span>) {
-                    stream
+                .pipe(webpack.closest(CONFIG_FILENAME))
+                .pipe(webpack.configure(webpackConfig))
+                .pipe(webpack.overrides(webpackOptions))
+                .pipe(webpack.<span class="pl-s3">watch</span>(<span class="pl-st">function</span>(<span class="pl-vpf">err</span>, <span class="pl-vpf">stats</span>) {
+                    gulp.<span class="pl-sc">src</span>(<span class="pl-v">this</span>.path, { base<span class="pl-k">:</span> <span class="pl-v">this</span>.base })
                         .pipe(webpack.proxy(err, stats))
                         .pipe(webpack.format({
                             verbose<span class="pl-k">:</span> <span class="pl-c1">true</span>,
