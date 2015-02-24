@@ -1,9 +1,9 @@
 'use strict';
 
 var path = require('path'),
-    WebpackConfig = require('webpack-config');
+    webpackConfig = require('webpack-config');
 
-module.exports = WebpackConfig.fromCwd().extend({
+module.exports = webpackConfig.fromCwd().extend({
     output: {
         path: path.join(__dirname, '[hash]')
     },

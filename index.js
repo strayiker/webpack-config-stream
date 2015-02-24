@@ -2,11 +2,10 @@
 
 var path = require('path'),
     fs = require('fs'),
+    _ = require('lodash'),
     through = require('through2'),
     tildify = require('tildify'),
-    gulp = require('gulp'),
     gutil = require('gulp-util'),
-    defaults = require('defaults'),
     webpack = require('webpack'),
     WebpackConfig = require('webpack-config'),
     CompilerAdapter = require('./lib/compilerAdapter'),
@@ -41,6 +40,22 @@ function getOutputFs(outputFs) {
     return !util.isMemoryFs(outputFs) ? fs : outputFs;
 }
 
+function isStats(stats) {
+    return util.isStats(stats) || util.isMultiStats(stats);
+}
+
+function toMultiStats(stats) {
+    var multiStats = [];
+
+    if (util.isStats(stats)) {
+        multiStats = [stats];
+    } else if (util.isMultiStats(stats)) {
+        multiStats = stats.stats;
+    }
+
+    return multiStats;
+}
+
 function getFiles(chunk, stats) {
     if (!util.isStats(stats)) { return []; }
 
@@ -49,31 +64,41 @@ function getFiles(chunk, stats) {
         compiler = compilation.compiler,
         outputFs = getOutputFs(compiler.outputFileSystem);
 
-    return Object.keys(assets).filter(function(name) {
-        var asset = assets[name];
+    return _(assets).chain().keys().filter(function(key) {
+        var asset = assets[key];
 
         return asset && asset.emitted === true;
-    }).map(function(name) {
-        var asset = assets[name],
+    }).map(function(key) {
+        var asset = assets[key],
             filename = asset.existsAt,
             base = path.resolve(filename, chunk.base),
-            contents = outputFs.readFileSync(filename),
-            file = new gutil.File({
-                base: base,
-                path: filename,
-                contents: contents
-            });
+            contents = outputFs.readFileSync(filename);
 
-        file.stats = stats;
+        return new gutil.File({
+            base: base,
+            path: filename,
+            contents: contents
+        });
+    }).value();
+}
 
-        return file;
-    });
+function getMultiFiles(chunk, stats) {
+    var multiStats = toMultiStats(stats);
+
+    return _(multiStats).chain().map(function(x) {
+        return getFiles(chunk, x);
+    }).flatten().map(function(x) {
+        x.stats = stats;
+        x.origin = chunk;
+
+        return x;
+    }).value();
 }
 
 function processStats(chunk, stats) {
-    if (!util.isStats(stats)) { return; }
+    if (!isStats(stats)) { return; }
 
-    var files = getFiles(chunk, stats);
+    var files = getMultiFiles(chunk, stats);
 
     if (files.length > 0) {
         files.forEach(function(file) {
@@ -86,11 +111,11 @@ function processStats(chunk, stats) {
     }
 }
 
-function progressCallback(p, msg) {
+function progressCallback(chunk, p, msg) {
     var percentage = Math.floor(p * 100) + '%';
 
     if (p === 0) {
-        var filename = path.resolve(this.options.config.filename);
+        var filename = path.resolve(chunk.path);
 
         gutil.log('Progress for webpack config', gutil.colors.magenta(tildify(filename)));
     }
@@ -118,8 +143,25 @@ function getCompilerOptions(chunk) {
     return options;
 }
 
+/**
+ * Called when `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
+ * **Note**: `this` is stream of `webpack.config.js` file.
+ * @name callback
+ * @function
+ * @param {Error} err - Error.
+ * @param {Stats} stats - Please see {@link http://webpack.github.io/docs/node.js-api.html#stats stats}
+* @memberof module:gulp-webpack-build
+ */
+
+/**
+ * Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.run` or `webpack.watch`. Re-emits all data passed from `webpack.run` or `webpack.watch`. Can be piped.
+ * **Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
+ * @param {callback} callback - The callback function.
+ * @returns {Stream}
+ * @memberof module:gulp-webpack-build
+*/
 function compile(callback) {
-    if (!util.isFunction(callback)) { callback = function() {}; }
+    if (!_.isFunction(callback)) { callback = function() {}; }
 
     return through.obj(function(chunk, enc, cb) {
         var webpackOptions = getWebpackOptions(chunk, false),
@@ -135,17 +177,24 @@ function compile(callback) {
             callback.apply(chunk, [err, stats]);
         }.bind(this));
 
-        if (util.isUndefined(compiler)) {
+        if (_.isUndefined(compiler)) {
             cb();
         }
     });
 }
 
+/**
+ * Writes formatted string of `stats` object and displays related `webpack.config.js` file path. Can be piped.
+ * @param {Object} options - Options to pass to {@link http://webpack.github.io/docs/node.js-api.html#stats-tostring `stats.toString`}.
+ * @param {Boolean} [options.verbose=`false`] - Writes fully formatted version of `stats` object.
+ * @returns {Stream}
+ * @memberof module:gulp-webpack-build
+*/
 function format(options) {
-    if (!util.isObject(options)) { options = {}; }
+    if (!_.isObject(options)) { options = {}; }
 
-    var cache = [],
-        statsOptions = options.verbose === true ? defaults(options, defaultVerboseStatsOptions) : defaults(options, defaultStatsOptions);
+    var cache = {},
+        statsOptions = options.verbose === true ? _.defaults(options, defaultVerboseStatsOptions) : _.defaults(options, defaultStatsOptions);
 
     if (!gutil.colors.supportsColor) {
         statsOptions.colors = false;
@@ -154,11 +203,10 @@ function format(options) {
     return through.obj(function(chunk, enc, callback) {
         var stats = chunk.stats;
 
-        if (util.isStats(stats) && cache.indexOf(stats) < 0) {
-            var compilation = stats.compilation,
-                filename = path.resolve(compilation.options.config.filename);
+        if (isStats(stats) && _.isUndefined(cache[stats.hash])) {
+            var filename = path.resolve(chunk.origin.path);
 
-            cache.push(stats);
+            cache[stats.hash] = stats;
 
             gutil.log('Stats for webpack config', gutil.colors.magenta(tildify(filename)));
             gutil.log('\n' + stats.toString(statsOptions));
@@ -166,18 +214,26 @@ function format(options) {
 
         callback(null, chunk);
     }).once('end', function() {
-        cache.splice(0, cache.length);
+        cache = null;
     });
 }
 
+/**
+ * Stops a task if some `stats` objects have some errors or warnings. Can be piped.
+ * @param {Object} options - Options.
+ * @param {Boolean} [options.errors=`false`] - Fails build if some `stats` objects have some errors.
+ * @param {Boolean} [options.warnings=`false`] - Fails build if some `stats` objects have some warnings.
+ * @returns {Stream}
+ * @memberof module:gulp-webpack-build
+*/
 function failAfter(options) {
-    var cache = [];
+    var cache = {};
 
     return through.obj(function(chunk, enc, cb) {
         var stats = chunk.stats;
 
-        if (util.isStats(stats) && cache.indexOf(stats) < 0) {
-            cache.push(stats);
+        if (isStats(stats) && _.isUndefined(cache[stats.hash])) {
+            cache[stats.hash] = stats;
         }
 
         cb(null, chunk);
@@ -186,11 +242,15 @@ function failAfter(options) {
             hasWarnings = false;
 
         if (options.errors === true) {
-            hasErrors = cache.some(function(x) { return x.hasErrors(); });
+            hasErrors = _(cache).chain().values().some(function(x) {
+                return x.hasErrors();
+            }).value();
         }
 
         if (options.warnings === true) {
-            hasWarnings = cache.some(function(x) { return x.hasWarnings(); });
+            hasWarnings = _(cache).chain().values().some(function(x) {
+                return x.hasWarnings();
+            }).value();
         }
 
         if (hasErrors || hasWarnings) {
@@ -199,10 +259,17 @@ function failAfter(options) {
             this.emit('error', wrapError(err));
         }
 
-        cache.splice(0, cache.length);
+        cache = null;
     });
 }
 
+/**
+ * For each file returned by `gulp.src()`, finds the closest `webpack.config.js` file (searching the directory as well as its ancestors). Can be piped.
+ * **Note**: Needs to be used together with `webpack.watch`.
+ * @param {String} [basename=`webpack.config.js`] - The name of config file.
+ * @returns {Stream}
+ * @memberof module:gulp-webpack-build
+*/
 function closest(basename) {
     return through.obj(function(chunk, enc, cb) {
         var filename = WebpackConfig.closest(chunk.path, basename);
@@ -220,13 +287,20 @@ function closest(basename) {
 
 var watchers = {};
 
+/**
+ * Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.watch`. Re-emits all data passed from `webpack.watch`. Can be piped.
+ * **Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
+ * @param {callback} callback - The callback function.
+ * @returns {Stream}
+ * @memberof module:gulp-webpack-build
+*/
 function watch(callback) {
-    if (!util.isFunction(callback)) { callback = function() {}; }
+    if (!_.isFunction(callback)) { callback = function() {}; }
 
     return through.obj(function(chunk, enc, cb) {
         var stat = fs.statSync(chunk.path),
             watcher = watchers[chunk.path],
-            isDirty = watcher && watcher.compiler.options.config.modifiedTime < stat.mtime;
+            isDirty = watcher && watcher.modifiedTime < stat.mtime;
 
         if (isDirty === true) {
             delete watchers[chunk.path];
@@ -244,7 +318,7 @@ function watch(callback) {
             });
 
             if (watcher) {
-                watcher.compiler.options.config.modifiedTime = stat.mtime;
+                watcher.modifiedTime = stat.mtime;
 
                 watchers[chunk.path] = watcher;
             }
@@ -254,6 +328,13 @@ function watch(callback) {
     });
 }
 
+/**
+ * Re-uses existing `err` and `stats` objects. Can be piped.
+ * @param {Error} err - Error.
+ * @param {Stats} stats - Please see {@link http://webpack.github.io/docs/node.js-api.html#stats stats}.
+ * @returns {Stream}
+ * @memberof module:gulp-webpack-build
+*/
 function proxy(err, stats) {
     return through.obj(function(chunk, enc, cb) {
         processStats.call(this, chunk, stats);
@@ -264,8 +345,14 @@ function proxy(err, stats) {
     });
 }
 
+/**
+ * Overrides existing properties of each `webpack.config.js` file. Can be piped.
+ * @param {Object} options - Please see {@link http://webpack.github.io/docs/configuration.html#configuration-object-content configuration}.
+ * @returns {Stream}
+ * @memberof module:gulp-webpack-build
+*/
 function overrides(options) {
-    if (!util.isObject(options)) { options = {}; }
+    if (!_.isObject(options)) { options = {}; }
 
     return through.obj(function(chunk, enc, cb) {
         chunk.webpackOptions = options;
@@ -274,8 +361,16 @@ function overrides(options) {
     });
 }
 
+/**
+ * Helps to configure `webpack` compiler. Can be piped.
+ * @param {Object} options - Options.
+ * @param {Boolean} [options.useMemoryFs=`false`] - Uses {@link https://github.com/webpack/memory-fs memory-fs} for `compiler.outputFileSystem`. Prevents writing of emitted files to file system. `gulp.dest` can be used. `gulp.dest` is resolved relative to {@link https://github.com/webpack/docs/wiki/configuration#outputpath output.path} if it is set; otherwise, it is resolved relative to {@link https://github.com/gulpjs/gulp/blob/master/docs/API.md#optionsbase options.base} (by default, the path of `gulpfile.js`).
+ * @param {Boolean} [options.progress=`false`] - Adds ability to track compilation progress.
+ * @returns {Stream}
+ * @memberof module:gulp-webpack-build
+*/
 function configure(options) {
-    if (!util.isObject(options)) { options = {}; }
+    if (!_.isObject(options)) { options = {}; }
 
     return through.obj(function(chunk, enc, cb) {
         chunk.compilerOptions = options;
@@ -284,6 +379,15 @@ function configure(options) {
     });
 }
 
+/**
+ * @module gulp-webpack-build
+ * @example
+ * `gulpfile.js`
+ *
+ * ``` javascript
+ * {"gitdown": "include", "file": "samples/gulpfile.js"}
+ * ```
+ */
 module.exports = {
     compile: compile,
     format: format,
@@ -293,6 +397,16 @@ module.exports = {
     proxy: proxy,
     overrides: overrides,
     configure: configure,
+    /**
+     * Alias for {@link http://webpack.github.io/docs/node.js-api.html webpack}.
+     * @property {webpack}
+     * @readonly
+     */
     core: webpack,
+    /**
+     * Alias for {@link http://mdreizin.github.io/webpack-config webpack-config}.
+     * @property {WebpackConfig}
+     * @readonly
+     */
     config: WebpackConfig
 };

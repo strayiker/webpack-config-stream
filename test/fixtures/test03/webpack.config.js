@@ -1,5 +1,13 @@
 'use strict';
 
-var WebpackConfig = require('webpack-config');
+var path = require('path'),
+    webpackConfig = require('webpack-config');
 
-module.exports = WebpackConfig.fromCwd().extend({});
+module.exports = [
+    webpackConfig.fromCwd().extend({}),
+    webpackConfig.fromCwd().extend({
+        entry: {
+            test3: path.join(__dirname, 'index.js')
+        }
+    })
+];

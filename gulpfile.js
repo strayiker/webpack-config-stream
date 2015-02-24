@@ -4,18 +4,25 @@ var path = require('path'),
     gulp = require('gulp'),
     del = require('del'),
     eslint = require('gulp-eslint'),
+    jsdoc2md = require('gulp-jsdoc-to-markdown'),
     runSequence = require('run-sequence'),
+    concat = require('gulp-concat'),
     webpack = require('./'),
     Gitdown = require('gitdown');
 
-var src = './test/fixtures',
-    dest = './test/expected',
+var src = './lib',
     paths = {
-        scripts: [
-            path.join(src, '*.js'),
-            path.join('./samples', '**/*.js'),
-            'gulpfile.js'
-        ]
+        src: {
+            test: './test/fixtures',
+            scripts: [
+                path.join(src, '*.js'),
+                path.join('./samples', '**/*.js'),
+                'gulpfile.js'
+            ]
+        },
+        dest: {
+            test: './test/expected'
+        }
     },
     webpackOptions = {
         debug: true,
@@ -29,14 +36,14 @@ var src = './test/fixtures',
     CONFIG_FILENAME = webpack.config.CONFIG_FILENAME;
 
 gulp.task('lint', function() {
-    return gulp.src(paths.scripts)
+    return gulp.src(paths.src.scripts)
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failOnError());
 });
 
 gulp.task('webpack', [], function() {
-    return gulp.src(path.join(path.join(src, '**', CONFIG_FILENAME)), { base: path.resolve(src) })
+    return gulp.src(path.join(paths.src.test, '**', CONFIG_FILENAME), { base: path.resolve(paths.src.test) })
         .pipe(webpack.configure(webpackConfig))
         .pipe(webpack.overrides(webpackOptions))
         .pipe(webpack.compile())
@@ -48,13 +55,13 @@ gulp.task('webpack', [], function() {
             errors: true,
             warnings: true
         }))
-        .pipe(gulp.dest(dest));
+        .pipe(gulp.dest(paths.dest.test));
 });
 
 gulp.task('watch', [], function() {
-    gulp.watch(path.join(src, '**/*.*')).on('change', function(event) {
+    gulp.watch(path.join(paths.src.test, '**/*.*')).on('change', function(event) {
         if (event.type === 'changed') {
-            gulp.src(event.path, { base: path.resolve(src) })
+            gulp.src(event.path, { base: path.resolve(paths.src.test) })
                 .pipe(webpack.closest(CONFIG_FILENAME))
                 .pipe(webpack.configure(webpackConfig))
                 .pipe(webpack.overrides(webpackOptions))
@@ -65,14 +72,14 @@ gulp.task('watch', [], function() {
                             verbose: true,
                             version: false
                         }))
-                        .pipe(gulp.dest(dest));
+                        .pipe(gulp.dest(paths.dest.test));
                 }));
         }
     });
 });
 
 gulp.task('clean', function(callback) {
-    del(path.join(dest, '**'), callback);
+    del(path.join(paths.dest.test, '**'), callback);
 });
 
 gulp.task('gitdown:readme', function() {
@@ -91,7 +98,19 @@ gulp.task('gitdown', function(callback) {
     runSequence('gitdown:readme', 'gitdown:api', callback);
 });
 
-gulp.task('docs', ['gitdown']);
+gulp.task('jsdoc2md', function() {
+    return gulp.src([
+            './index.js',
+            path.join(src, '**/*.js')
+        ])
+        .pipe(concat('API.md'))
+        .pipe(jsdoc2md())
+        .pipe(gulp.dest('.gitdown/docs'));
+});
+
+gulp.task('docs', function(callback) {
+    runSequence('jsdoc2md', 'gitdown', callback);
+});
 
 gulp.task('default', [], function(callback) {
     runSequence('clean', 'lint', 'docs', 'webpack', callback);

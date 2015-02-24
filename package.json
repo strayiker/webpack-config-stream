@@ -25,19 +25,28 @@
   },
   "homepage": "https://github.com/mdreizin/gulp-webpack-build",
   "devDependencies": {
+    "bower-webpack-plugin": "^0.1.6",
     "del": "^1.1.0",
+    "extract-text-webpack-plugin": "^0.3.8",
     "gitdown": "^1.2.6",
     "gulp": "^3.8.10",
+    "gulp-concat": "^2.5.2",
     "gulp-eslint": "^0.4.1",
-    "run-sequence": "^1.0.2"
+    "gulp-jsdoc-to-markdown": "^0.1.6",
+    "html-loader": "^0.2.3",
+    "json-loader": "^0.5.1",
+    "less": "^2.4.0",
+    "less-loader": "^2.0.0",
+    "run-sequence": "^1.0.2",
+    "style-loader": "^0.8.3"
   },
   "dependencies": {
-    "defaults": "^1.0.0",
     "gulp-util": "^3.0.1",
+    "lodash": "^3.3.0",
     "memory-fs": "^0.2.0",
     "through2": "^0.6.3",
     "tildify": "^1.0.0",
     "webpack": "^1.5.3",
-    "webpack-config": "^0.3.0"
+    "webpack-config": "^0.4.0"
   }
 }
