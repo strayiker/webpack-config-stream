@@ -87,12 +87,7 @@ function getMultiFiles(chunk, stats) {
 
     return _(multiStats).chain().map(function(x) {
         return getFiles(chunk, x);
-    }).flatten().map(function(x) {
-        x.stats = stats;
-        x.origin = chunk;
-
-        return x;
-    }).value();
+    }).flatten().value();
 }
 
 function processStats(chunk, stats) {
@@ -100,15 +95,16 @@ function processStats(chunk, stats) {
 
     var files = getMultiFiles(chunk, stats);
 
-    if (files.length > 0) {
-        files.forEach(function(file) {
-            this.push(file);
-        }, this);
-    } else {
-        chunk.stats = stats;
-
-        this.push(chunk);
+    if (files.length === 0) {
+        files.push(chunk);
     }
+
+    files.forEach(function(file) {
+        file.stats = stats;
+        file.origin = chunk;
+
+        this.push(file);
+    }, this);
 }
 
 function progressCallback(chunk, p, msg) {
