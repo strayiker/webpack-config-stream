@@ -112,6 +112,10 @@ gulp.task('docs', function(callback) {
     runSequence('jsdoc2md', 'gitdown', callback);
 });
 
+gulp.task('ci', function(callback) {
+    runSequence('lint', 'webpack', callback);
+});
+
 gulp.task('default', [], function(callback) {
     runSequence('clean', 'lint', 'docs', 'webpack', callback);
 });
