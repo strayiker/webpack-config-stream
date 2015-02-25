@@ -28,7 +28,7 @@
         </ul>
       </header>
       <section>
-        <p><a href="https://www.npmjs.org/package/gulp-webpack-build"><img src="http://img.shields.io/npm/v/gulp-webpack-build.svg?style=flat" alt="NPM version"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build"><img src="https://david-dm.org/mdreizin/gulp-webpack-build.svg?style=flat" alt="Dependency Status"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build#info=devDependencies"><img src="https://david-dm.org/mdreizin/gulp-webpack-build/dev-status.svg?style=flat" alt="Dependency Status"></a></p>
+        <p><a href="https://www.npmjs.org/package/gulp-webpack-build"><img src="http://img.shields.io/npm/v/gulp-webpack-build.svg?style=flat" alt="NPM version"></a> <a href="https://travis-ci.org/mdreizin/gulp-webpack-build"><img src="http://img.shields.io/travis/mdreizin/gulp-webpack-build/master.svg?style=flat" alt="Travis build status"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build"><img src="https://david-dm.org/mdreizin/gulp-webpack-build.svg?style=flat" alt="Dependency Status"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build#info=devDependencies"><img src="https://david-dm.org/mdreizin/gulp-webpack-build/dev-status.svg?style=flat" alt="Dependency Status"></a></p>
 
 <p><a href="https://nodei.co/npm/gulp-webpack-build/"><img src="https://nodei.co/npm/gulp-webpack-build.png?downloads=true&amp;stars=true" alt="NPM"></a></p>
 
@@ -70,7 +70,7 @@
     CONFIG_FILENAME <span class="pl-k">=</span> webpack.config.CONFIG_FILENAME;
 
 gulp.task(<span class="pl-s1"><span class="pl-pds">'</span>webpack<span class="pl-pds">'</span></span>, [], <span class="pl-st">function</span>() {
-    <span class="pl-k">return</span> gulp.<span class="pl-sc">src</span>(path.<span class="pl-s3">join</span>(path.<span class="pl-s3">join</span>(src, <span class="pl-s1"><span class="pl-pds">'</span>**<span class="pl-pds">'</span></span>, CONFIG_FILENAME)), { base<span class="pl-k">:</span> path.resolve(src) })
+    <span class="pl-k">return</span> gulp.<span class="pl-sc">src</span>(path.<span class="pl-s3">join</span>(src, <span class="pl-s1"><span class="pl-pds">'</span>**<span class="pl-pds">'</span></span>, CONFIG_FILENAME), { base<span class="pl-k">:</span> path.resolve(src) })
         .pipe(webpack.configure(webpackConfig))
         .pipe(webpack.overrides(webpackOptions))
         .pipe(webpack.<span class="pl-s3">compile</span>())
