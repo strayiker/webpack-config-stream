@@ -5,12 +5,6 @@ var path = require('path'),
 
 module.exports = webpackConfig.fromCwd().extend({
     entry: {
-        test1: path.join(__dirname, 'index.js')
-    },
-    module: {
-        loaders: [{
-            test: /\.json$/,
-            loader: 'json-loader'
-        }]
+        index: path.join(__dirname, 'index.js')
     }
 });

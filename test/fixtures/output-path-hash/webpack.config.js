@@ -8,6 +8,6 @@ module.exports = webpackConfig.fromCwd().extend({
         path: path.join(__dirname, '[hash]')
     },
     entry: {
-        test4: path.join(__dirname, 'index.js')
+        index: path.join(__dirname, 'index.js')
     }
 });
