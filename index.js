@@ -119,10 +119,10 @@ function progressCallback(chunk, p, msg) {
     gutil.log(percentage, gutil.colors.grey(msg));
 }
 
-function getWebpackOptions(chunk, watch) {
+function getWebpackOptions(chunk, watching) {
     var options = chunk.webpackOptions || {};
 
-    if (watch === false) {
+    if (watching === false) {
         delete options.watch;
     }
 
@@ -142,17 +142,16 @@ function getCompilerOptions(chunk) {
 /**
  * Called when `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
  * **Note**: `this` is stream of `webpack.config.js` file.
- * @name callback
- * @function
+ * @callback compilationCallback
  * @param {Error} err - Error.
  * @param {Stats} stats - Please see {@link http://webpack.github.io/docs/node.js-api.html#stats stats}
-* @memberof module:gulp-webpack-build
+ * @memberof module:gulp-webpack-build
  */
 
 /**
  * Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.run` or `webpack.watch`. Re-emits all data passed from `webpack.run` or `webpack.watch`. Can be piped.
  * **Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
- * @param {callback} callback - The callback function.
+ * @param {compilationCallback} [callback] - The callback function.
  * @returns {Stream}
  * @memberof module:gulp-webpack-build
 */
@@ -286,7 +285,7 @@ var watchers = {};
 /**
  * Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.watch`. Re-emits all data passed from `webpack.watch`. Can be piped.
  * **Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
- * @param {callback} callback - The callback function.
+ * @param {compilationCallback} [callback] - The callback function.
  * @returns {Stream}
  * @memberof module:gulp-webpack-build
 */

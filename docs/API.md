@@ -66,15 +66,15 @@ gulp.task('watch', function() {
 * [gulp-webpack-build](#module_gulp-webpack-build)
   * [gulp-webpack-build.core](#module_gulp-webpack-build.core)
   * [gulp-webpack-build.config](#module_gulp-webpack-build.config)
-  * [gulp-webpack-build.callback(err, stats)](#module_gulp-webpack-build.callback)
-  * [gulp-webpack-build.compile(callback)](#module_gulp-webpack-build.compile)
+  * [gulp-webpack-build.compile([callback])](#module_gulp-webpack-build.compile)
   * [gulp-webpack-build.format(options)](#module_gulp-webpack-build.format)
   * [gulp-webpack-build.failAfter(options)](#module_gulp-webpack-build.failAfter)
   * [gulp-webpack-build.closest([basename])](#module_gulp-webpack-build.closest)
-  * [gulp-webpack-build.watch(callback)](#module_gulp-webpack-build.watch)
+  * [gulp-webpack-build.watch([callback])](#module_gulp-webpack-build.watch)
   * [gulp-webpack-build.proxy(err, stats)](#module_gulp-webpack-build.proxy)
   * [gulp-webpack-build.overrides(options)](#module_gulp-webpack-build.overrides)
   * [gulp-webpack-build.configure(options)](#module_gulp-webpack-build.configure)
+  * [callback: gulp-webpack-build.compilationCallback](#module_gulp-webpack-build.compilationCallback)
 
 <a name="module_gulp-webpack-build.core"></a>
 ##gulp-webpack-build.core
@@ -94,24 +94,14 @@ Alias for [webpack-config](http://mdreizin.github.io/webpack-config).
 -  `WebpackConfig`  
 
 **Read only**: true  
-<a name="module_gulp-webpack-build.callback"></a>
-##gulp-webpack-build.callback(err, stats)
-Called when `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
-**Note**: `this` is stream of `webpack.config.js` file.
-
-**Params**
-
-- err `Error` - Error.  
-- stats `Stats` - Please see [stats](http://webpack.github.io/docs/node.js-api.html#stats)  
-
 <a name="module_gulp-webpack-build.compile"></a>
-##gulp-webpack-build.compile(callback)
+##gulp-webpack-build.compile([callback])
 Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.run` or `webpack.watch`. Re-emits all data passed from `webpack.run` or `webpack.watch`. Can be piped.
 **Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
 
 **Params**
 
-- callback `callback` - The callback function.  
+- \[callback\] `compilationCallback` - The callback function.  
 
 **Returns**: `Stream`  
 <a name="module_gulp-webpack-build.format"></a>
@@ -146,13 +136,13 @@ For each file returned by `gulp.src()`, finds the closest `webpack.config.js` fi
 
 **Returns**: `Stream`  
 <a name="module_gulp-webpack-build.watch"></a>
-##gulp-webpack-build.watch(callback)
+##gulp-webpack-build.watch([callback])
 Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.watch`. Re-emits all data passed from `webpack.watch`. Can be piped.
 **Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
 
 **Params**
 
-- callback `callback` - The callback function.  
+- \[callback\] `compilationCallback` - The callback function.  
 
 **Returns**: `Stream`  
 <a name="module_gulp-webpack-build.proxy"></a>
@@ -185,3 +175,14 @@ Helps to configure `webpack` compiler. Can be piped.
   - \[progress=`false`\] `Boolean` - Adds ability to track compilation progress.  
 
 **Returns**: `Stream`  
+<a name="module_gulp-webpack-build.compilationCallback"></a>
+##callback: gulp-webpack-build.compilationCallback
+Called when `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
+**Note**: `this` is stream of `webpack.config.js` file.
+
+**Params**
+
+- err `Error` - Error.  
+- stats `Stats` - Please see [stats](http://webpack.github.io/docs/node.js-api.html#stats)  
+
+**Type**: `function`  
