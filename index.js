@@ -95,10 +95,6 @@ function processStats(chunk, stats) {
 
     var files = getMultiFiles(chunk, stats);
 
-    if (files.length === 0) {
-        files.push(chunk);
-    }
-
     files.forEach(function(file) {
         file.stats = stats;
         file.origin = chunk;
