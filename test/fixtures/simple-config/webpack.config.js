@@ -5,6 +5,6 @@ var path = require('path'),
 
 module.exports = webpackConfig.fromCwd().extend({
     entry: {
-        index: path.join(__dirname, 'index.js')
+        'simple-config': path.join(__dirname, 'index.js')
     }
 });

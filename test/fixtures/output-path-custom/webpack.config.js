@@ -8,6 +8,6 @@ module.exports = webpackConfig.fromCwd().extend({
         path: path.resolve(__dirname, '../output-path-custom')
     },
     entry: {
-        index: path.join(__dirname, 'index.js')
+        'output-path-custom': path.join(__dirname, 'index.js')
     }
 });

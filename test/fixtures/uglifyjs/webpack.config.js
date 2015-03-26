@@ -6,7 +6,7 @@ var path = require('path'),
 
 module.exports = webpackConfig.fromCwd().extend({
     entry: {
-        index: path.join(__dirname, 'index.js')
+        'uglifyjs': path.join(__dirname, 'index.js')
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin()

@@ -7,7 +7,7 @@ module.exports = [
     webpackConfig.fromCwd().extend({}),
     webpackConfig.fromCwd().extend({
         entry: {
-            index: path.join(__dirname, 'index.js')
+            'multi-configs': path.join(__dirname, 'index.js')
         }
     })
 ];
