@@ -1,4 +1,4 @@
-{"gitdown": "badge", "name": "npm-version"} {"gitdown": "badge", "name": "travis"} {"gitdown": "badge", "name": "david"} {"gitdown": "badge", "name": "david-dev"}
+{"gitdown": "badge", "name": "npm-version"} {"gitdown": "badge", "name": "travis"} {"gitdown": "badge", "name": "codeclimate-gpa"} {"gitdown": "badge", "name": "david"} {"gitdown": "badge", "name": "david-dev"}
 
 [gulp](https://github.com/gulpjs/gulp)-[webpack](https://github.com/webpack/webpack)-build
 ==========================================================================================
