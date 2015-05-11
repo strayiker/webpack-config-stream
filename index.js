@@ -140,7 +140,8 @@ function getCompilerOptions(chunk) {
  * **Note**: `this` is stream of `webpack.config.js` file.
  * @callback compilationCallback
  * @param {Error} err - Error.
- * @param {Stats} stats - Please see {@link http://webpack.github.io/docs/node.js-api.html#stats stats}
+ * @param {Stats} stats - Please see {@link http://webpack.github.io/docs/node.js-api.html#stats stats}.
+ * @this Stream
  * @memberof module:gulp-webpack-build
  */
 
@@ -177,7 +178,7 @@ function compile(callback) {
 /**
  * Writes formatted string of `stats` object and displays related `webpack.config.js` file path. Can be piped.
  * @param {Object} options - Options to pass to {@link http://webpack.github.io/docs/node.js-api.html#stats-tostring `stats.toString`}.
- * @param {Boolean} [options.verbose=`false`] - Writes fully formatted version of `stats` object.
+ * @param {Boolean} [options.verbose=false] - Writes fully formatted version of `stats` object.
  * @returns {Stream}
  * @memberof module:gulp-webpack-build
 */
@@ -212,8 +213,8 @@ function format(options) {
 /**
  * Stops a task if some `stats` objects have some errors or warnings. Can be piped.
  * @param {Object} options - Options.
- * @param {Boolean} [options.errors=`false`] - Fails build if some `stats` objects have some errors.
- * @param {Boolean} [options.warnings=`false`] - Fails build if some `stats` objects have some warnings.
+ * @param {Boolean} [options.errors=false] - Fails build if some `stats` objects have some errors.
+ * @param {Boolean} [options.warnings=false] - Fails build if some `stats` objects have some warnings.
  * @returns {Stream}
  * @memberof module:gulp-webpack-build
 */
@@ -257,7 +258,7 @@ function failAfter(options) {
 /**
  * For each file returned by `gulp.src()`, finds the closest `webpack.config.js` file (searching the directory as well as its ancestors). Can be piped.
  * **Note**: Needs to be used together with `webpack.watch`.
- * @param {String} [basename=`webpack.config.js`] - The name of config file.
+ * @param {String} [basename=webpack.config.js] - The name of config file.
  * @returns {Stream}
  * @memberof module:gulp-webpack-build
 */
@@ -355,8 +356,8 @@ function overrides(options) {
 /**
  * Helps to configure `webpack` compiler. Can be piped.
  * @param {Object} options - Options.
- * @param {Boolean} [options.useMemoryFs=`false`] - Uses {@link https://github.com/webpack/memory-fs memory-fs} for `compiler.outputFileSystem`. Prevents writing of emitted files to file system. `gulp.dest` can be used. `gulp.dest` is resolved relative to {@link https://github.com/webpack/docs/wiki/configuration#outputpath output.path} if it is set; otherwise, it is resolved relative to {@link https://github.com/gulpjs/gulp/blob/master/docs/API.md#optionsbase options.base} (by default, the path of `gulpfile.js`).
- * @param {Boolean} [options.progress=`false`] - Adds ability to track compilation progress.
+ * @param {Boolean} [options.useMemoryFs=false] - Uses {@link https://github.com/webpack/memory-fs memory-fs} for `compiler.outputFileSystem`. Prevents writing of emitted files to file system. `gulp.dest` can be used. `gulp.dest` is resolved relative to {@link https://github.com/webpack/docs/wiki/configuration#outputpath output.path} if it is set; otherwise, it is resolved relative to {@link https://github.com/gulpjs/gulp/blob/master/docs/API.md#optionsbase options.base} (by default, the path of `gulpfile.js`).
+ * @param {Boolean} [options.progress=false] - Adds ability to track compilation progress.
  * @returns {Stream}
  * @memberof module:gulp-webpack-build
 */
