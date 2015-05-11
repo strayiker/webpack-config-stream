@@ -47,6 +47,6 @@
     "through2": "^0.6.5",
     "tildify": "^1.0.0",
     "webpack": "^1.9.4",
-    "webpack-config": "^0.5.0"
+    "webpack-config": "^0.6.0"
   }
 }
