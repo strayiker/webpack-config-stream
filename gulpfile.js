@@ -17,6 +17,7 @@ var src = './lib',
             scripts: [
                 path.join(src, '*.js'),
                 path.join('./samples', '**/*.js'),
+                'index.js',
                 'gulpfile.js'
             ]
         },
