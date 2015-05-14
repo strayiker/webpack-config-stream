@@ -1,3 +1,17 @@
+## Modules
+<dl>
+<dt><a href="#module_gulp-webpack-build">gulp-webpack-build</a></dt>
+<dd></dd>
+</dl>
+## External
+<dl>
+<dt><a href="#external_Stats">Stats</a></dt>
+<dd><p>Stats</p>
+</dd>
+<dt><a href="#external_Configuration">Configuration</a></dt>
+<dd><p>Configuration</p>
+</dd>
+</dl>
 <a name="module_gulp-webpack-build"></a>
 ## gulp-webpack-build
 **Example**  
@@ -65,13 +79,13 @@ gulp.task('watch', function() {
   * [.core](#module_gulp-webpack-build.core)
   * [.config](#module_gulp-webpack-build.config)
   * [.compile([callback])](#module_gulp-webpack-build.compile) ⇒ <code>Stream</code>
-  * [.format(options)](#module_gulp-webpack-build.format) ⇒ <code>Stream</code>
-  * [.failAfter(options)](#module_gulp-webpack-build.failAfter) ⇒ <code>Stream</code>
+  * [.format([options])](#module_gulp-webpack-build.format) ⇒ <code>Stream</code>
+  * [.failAfter([options])](#module_gulp-webpack-build.failAfter) ⇒ <code>Stream</code>
   * [.closest([basename])](#module_gulp-webpack-build.closest) ⇒ <code>Stream</code>
   * [.watch([callback])](#module_gulp-webpack-build.watch) ⇒ <code>Stream</code>
   * [.proxy(err, stats)](#module_gulp-webpack-build.proxy) ⇒ <code>Stream</code>
-  * [.overrides(options)](#module_gulp-webpack-build.overrides) ⇒ <code>Stream</code>
-  * [.configure(options)](#module_gulp-webpack-build.configure) ⇒ <code>Stream</code>
+  * [.overrides([options])](#module_gulp-webpack-build.overrides) ⇒ <code>Stream</code>
+  * [.configure([options])](#module_gulp-webpack-build.configure) ⇒ <code>Stream</code>
   * [.compilationCallback](#module_gulp-webpack-build.compilationCallback) : <code>function</code>
 
 <a name="module_gulp-webpack-build.core"></a>
@@ -110,25 +124,25 @@ Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.run
 | [callback] | <code>compilationCallback</code> | The callback function. |
 
 <a name="module_gulp-webpack-build.format"></a>
-### gulp-webpack-build.format(options) ⇒ <code>Stream</code>
+### gulp-webpack-build.format([options]) ⇒ <code>Stream</code>
 Writes formatted string of `stats` object and displays related `webpack.config.js` file path. Can be piped.
 
 **Kind**: static method of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| options | <code>Object</code> |  | Options to pass to [`stats.toString`](http://webpack.github.io/docs/node.js-api.html#stats-tostring). |
+| [options] | <code>Object</code> |  | Options to pass to [`stats.toString`](http://webpack.github.io/docs/node.js-api.html#stats-tostring). |
 | [options.verbose] | <code>Boolean</code> | <code>false</code> | Writes fully formatted version of `stats` object. |
 
 <a name="module_gulp-webpack-build.failAfter"></a>
-### gulp-webpack-build.failAfter(options) ⇒ <code>Stream</code>
+### gulp-webpack-build.failAfter([options]) ⇒ <code>Stream</code>
 Stops a task if some `stats` objects have some errors or warnings. Can be piped.
 
 **Kind**: static method of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| options | <code>Object</code> |  | Options. |
+| [options] | <code>Object</code> |  | Options. |
 | [options.errors] | <code>Boolean</code> | <code>false</code> | Fails build if some `stats` objects have some errors. |
 | [options.warnings] | <code>Boolean</code> | <code>false</code> | Fails build if some `stats` objects have some warnings. |
 
@@ -163,27 +177,27 @@ Re-uses existing `err` and `stats` objects. Can be piped.
 | Param | Type | Description |
 | --- | --- | --- |
 | err | <code>Error</code> | Error. |
-| stats | <code>Stats</code> | Please see [stats](http://webpack.github.io/docs/node.js-api.html#stats). |
+| stats | <code>Stats</code> | Stats. |
 
 <a name="module_gulp-webpack-build.overrides"></a>
-### gulp-webpack-build.overrides(options) ⇒ <code>Stream</code>
+### gulp-webpack-build.overrides([options]) ⇒ <code>Stream</code>
 Overrides existing properties of each `webpack.config.js` file. Can be piped.
 
 **Kind**: static method of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| options | <code>Object</code> | Please see [configuration](http://webpack.github.io/docs/configuration.html#configuration-object-content). |
+| [options] | <code>Configuration</code> | Options. |
 
 <a name="module_gulp-webpack-build.configure"></a>
-### gulp-webpack-build.configure(options) ⇒ <code>Stream</code>
+### gulp-webpack-build.configure([options]) ⇒ <code>Stream</code>
 Helps to configure `webpack` compiler. Can be piped.
 
 **Kind**: static method of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| options | <code>Object</code> |  | Options. |
+| [options] | <code>Object</code> |  | Options. |
 | [options.useMemoryFs] | <code>Boolean</code> | <code>false</code> | Uses [memory-fs](https://github.com/webpack/memory-fs) for `compiler.outputFileSystem`. Prevents writing of emitted files to file system. `gulp.dest` can be used. `gulp.dest` is resolved relative to [output.path](https://github.com/webpack/docs/wiki/configuration#outputpath) if it is set; otherwise, it is resolved relative to [options.base](https://github.com/gulpjs/gulp/blob/master/docs/API.md#optionsbase) (by default, the path of `gulpfile.js`). |
 | [options.progress] | <code>Boolean</code> | <code>false</code> | Adds ability to track compilation progress. |
 
@@ -198,5 +212,17 @@ Called when `webpack.config.js` file is compiled. Will be passed `err` and `stat
 | Param | Type | Description |
 | --- | --- | --- |
 | err | <code>Error</code> | Error. |
-| stats | <code>Stats</code> | Please see [stats](http://webpack.github.io/docs/node.js-api.html#stats). |
+| stats | <code>Stats</code> | Stats. |
 
+<a name="external_Stats"></a>
+## Stats
+Stats
+
+**Kind**: global external  
+**See**: [http://webpack.github.io/docs/node.js-api.html#stats](http://webpack.github.io/docs/node.js-api.html#stats)  
+<a name="external_Configuration"></a>
+## Configuration
+Configuration
+
+**Kind**: global external  
+**See**: [http://webpack.github.io/docs/configuration.html#configuration-object-content](http://webpack.github.io/docs/configuration.html#configuration-object-content)  
