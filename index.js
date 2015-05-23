@@ -8,6 +8,7 @@ var path = require('path'),
     gutil = require('gulp-util'),
     webpack = require('webpack'),
     WebpackConfig = require('webpack-config'),
+    deprecated = require('deprecated'),
     CompilerAdapter = require('./lib/compilerAdapter'),
     util = require('./lib/util');
 
@@ -146,6 +147,12 @@ function getCompilerOptions(chunk) {
  */
 
 /**
+ * Error
+ * @external Error
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error}
+ */
+
+/**
  * Stats
  * @external Stats
  * @see {@link http://webpack.github.io/docs/node.js-api.html#stats}
@@ -158,13 +165,13 @@ function getCompilerOptions(chunk) {
  */
 
 /**
- * Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.run` or `webpack.watch`. Re-emits all data passed from `webpack.run` or `webpack.watch`. Can be piped.
- * **Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
+ * Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.run`. Re-emits all data passed from `webpack.run`. Can be piped.
+ * **Note**: Needs to be used after `webpack.init` and `webpack.props`.
  * @param {compilationCallback} [callback] - The callback function.
  * @returns {Stream}
  * @memberof module:gulp-webpack-build
 */
-function compile(callback) {
+function run(callback) {
     if (!_.isFunction(callback)) { callback = function() {}; }
 
     return through.obj(function(chunk, enc, cb) {
@@ -295,7 +302,7 @@ var watchers = {};
 
 /**
  * Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.watch`. Re-emits all data passed from `webpack.watch`. Can be piped.
- * **Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
+ * **Note**: Needs to be used after `webpack.init` and `webpack.props`.
  * @param {compilationCallback} [callback] - The callback function.
  * @returns {Stream}
  * @memberof module:gulp-webpack-build
@@ -357,7 +364,7 @@ function proxy(err, stats) {
  * @returns {Stream}
  * @memberof module:gulp-webpack-build
 */
-function overrides(options) {
+function props(options) {
     if (!_.isObject(options)) { options = {}; }
 
     return through.obj(function(chunk, enc, cb) {
@@ -368,14 +375,14 @@ function overrides(options) {
 }
 
 /**
- * Helps to configure `webpack` compiler. Can be piped.
+ * Helps to init `webpack` compiler. Can be piped.
  * @param {Object=} options - Options.
  * @param {Boolean} [options.useMemoryFs=false] - Uses {@link https://github.com/webpack/memory-fs memory-fs} for `compiler.outputFileSystem`. Prevents writing of emitted files to file system. `gulp.dest` can be used. `gulp.dest` is resolved relative to {@link https://github.com/webpack/docs/wiki/configuration#outputpath output.path} if it is set; otherwise, it is resolved relative to {@link https://github.com/gulpjs/gulp/blob/master/docs/API.md#optionsbase options.base} (by default, the path of `gulpfile.js`).
  * @param {Boolean} [options.progress=false] - Adds ability to track compilation progress.
  * @returns {Stream}
  * @memberof module:gulp-webpack-build
 */
-function configure(options) {
+function init(options) {
     if (!_.isObject(options)) { options = {}; }
 
     return through.obj(function(chunk, enc, cb) {
@@ -383,6 +390,12 @@ function configure(options) {
 
         cb(null, chunk);
     });
+}
+
+function deprecatedMethod(message, method) {
+    return deprecated.method(message, function() {
+        gutil.log(gutil.colors.red('[' + PLUGIN_NAME + ']'), gutil.colors.red(message));
+    }, method);
 }
 
 /**
@@ -395,14 +408,14 @@ function configure(options) {
  * ```
  */
 module.exports = {
-    compile: compile,
+    run: run,
     format: format,
     failAfter: failAfter,
     closest: closest,
     watch: watch,
     proxy: proxy,
-    overrides: overrides,
-    configure: configure,
+    props: props,
+    init: init,
     /**
      * Alias for {@link http://webpack.github.io/docs/node.js-api.html webpack}.
      * @property {webpack}
@@ -414,5 +427,17 @@ module.exports = {
      * @property {WebpackConfig}
      * @readonly
      */
-    config: WebpackConfig
+    config: WebpackConfig,
+    /**
+     * @deprecated
+     */
+    compile: deprecatedMethod('Method "compile()" has been deprecated. Use "run()" instead.', run),
+    /**
+     * @deprecated
+     */
+    overrides: deprecatedMethod('Method "overrides()" has been deprecated. Use "props()" instead.', props),
+    /**
+     * @deprecated
+     */
+    configure: deprecatedMethod('Method "configure()" has been deprecated. Use "init()" instead.', init)
 };

@@ -45,9 +45,9 @@ gulp.task('lint', function() {
 
 gulp.task('webpack', [], function() {
     return gulp.src(path.join(paths.src.test, '**', CONFIG_FILENAME), { base: path.resolve(paths.src.test) })
-        .pipe(webpack.configure(webpackConfig))
-        .pipe(webpack.overrides(webpackOptions))
-        .pipe(webpack.compile())
+        .pipe(webpack.init(webpackConfig))
+        .pipe(webpack.props(webpackOptions))
+        .pipe(webpack.run())
         .pipe(webpack.format({
             version: false,
             timings: true
@@ -64,8 +64,8 @@ gulp.task('watch', [], function() {
         if (event.type === 'changed') {
             gulp.src(event.path, { base: path.resolve(paths.src.test) })
                 .pipe(webpack.closest(CONFIG_FILENAME))
-                .pipe(webpack.configure(webpackConfig))
-                .pipe(webpack.overrides(webpackOptions))
+                .pipe(webpack.init(webpackConfig))
+                .pipe(webpack.props(webpackOptions))
                 .pipe(webpack.watch(function(err, stats) {
                     gulp.src(this.path, { base: this.base })
                         .pipe(webpack.proxy(err, stats))

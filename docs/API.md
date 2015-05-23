@@ -5,6 +5,9 @@
 </dl>
 ## External
 <dl>
+<dt><a href="#external_Error">Error</a></dt>
+<dd><p>Error</p>
+</dd>
 <dt><a href="#external_Stats">Stats</a></dt>
 <dd><p>Stats</p>
 </dd>
@@ -39,9 +42,9 @@ var src = './src',
 
 gulp.task('webpack', [], function() {
     return gulp.src(path.join(src, '**', CONFIG_FILENAME), { base: path.resolve(src) })
-        .pipe(webpack.configure(webpackConfig))
-        .pipe(webpack.overrides(webpackOptions))
-        .pipe(webpack.compile())
+        .pipe(webpack.init(webpackConfig))
+        .pipe(webpack.props(webpackOptions))
+        .pipe(webpack.run())
         .pipe(webpack.format({
             version: false,
             timings: true
@@ -58,8 +61,8 @@ gulp.task('watch', function() {
         if (event.type === 'changed') {
             gulp.src(event.path, { base: path.resolve(src) })
                 .pipe(webpack.closest(CONFIG_FILENAME))
-                .pipe(webpack.configure(webpackConfig))
-                .pipe(webpack.overrides(webpackOptions))
+                .pipe(webpack.init(webpackConfig))
+                .pipe(webpack.props(webpackOptions))
                 .pipe(webpack.watch(function(err, stats) {
                     gulp.src(this.path, { base: this.base })
                         .pipe(webpack.proxy(err, stats))
@@ -78,14 +81,17 @@ gulp.task('watch', function() {
 * [gulp-webpack-build](#module_gulp-webpack-build)
   * [.core](#module_gulp-webpack-build.core)
   * [.config](#module_gulp-webpack-build.config)
-  * [.compile([callback])](#module_gulp-webpack-build.compile) ⇒ <code>Stream</code>
+  * ~~[.compile](#module_gulp-webpack-build.compile)~~
+  * ~~[.overrides](#module_gulp-webpack-build.overrides)~~
+  * ~~[.configure](#module_gulp-webpack-build.configure)~~
+  * [.run([callback])](#module_gulp-webpack-build.run) ⇒ <code>Stream</code>
   * [.format([options])](#module_gulp-webpack-build.format) ⇒ <code>Stream</code>
   * [.failAfter([options])](#module_gulp-webpack-build.failAfter) ⇒ <code>Stream</code>
   * [.closest([basename])](#module_gulp-webpack-build.closest) ⇒ <code>Stream</code>
   * [.watch([callback])](#module_gulp-webpack-build.watch) ⇒ <code>Stream</code>
   * [.proxy(err, stats)](#module_gulp-webpack-build.proxy) ⇒ <code>Stream</code>
-  * [.overrides([options])](#module_gulp-webpack-build.overrides) ⇒ <code>Stream</code>
-  * [.configure([options])](#module_gulp-webpack-build.configure) ⇒ <code>Stream</code>
+  * [.props([options])](#module_gulp-webpack-build.props) ⇒ <code>Stream</code>
+  * [.init([options])](#module_gulp-webpack-build.init) ⇒ <code>Stream</code>
   * [.compilationCallback](#module_gulp-webpack-build.compilationCallback) : <code>function</code>
 
 <a name="module_gulp-webpack-build.core"></a>
@@ -113,9 +119,24 @@ Alias for [webpack-config](http://mdreizin.github.io/webpack-config).
 | <code>WebpackConfig</code> | 
 
 <a name="module_gulp-webpack-build.compile"></a>
-### gulp-webpack-build.compile([callback]) ⇒ <code>Stream</code>
-Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.run` or `webpack.watch`. Re-emits all data passed from `webpack.run` or `webpack.watch`. Can be piped.
-**Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
+### ~~gulp-webpack-build.compile~~
+***Deprecated***
+
+**Kind**: static property of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
+<a name="module_gulp-webpack-build.overrides"></a>
+### ~~gulp-webpack-build.overrides~~
+***Deprecated***
+
+**Kind**: static property of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
+<a name="module_gulp-webpack-build.configure"></a>
+### ~~gulp-webpack-build.configure~~
+***Deprecated***
+
+**Kind**: static property of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
+<a name="module_gulp-webpack-build.run"></a>
+### gulp-webpack-build.run([callback]) ⇒ <code>Stream</code>
+Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.run`. Re-emits all data passed from `webpack.run`. Can be piped.
+**Note**: Needs to be used after `webpack.init` and `webpack.props`.
 
 **Kind**: static method of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
 
@@ -160,7 +181,7 @@ For each file returned by `gulp.src()`, finds the closest `webpack.config.js` fi
 <a name="module_gulp-webpack-build.watch"></a>
 ### gulp-webpack-build.watch([callback]) ⇒ <code>Stream</code>
 Accepts `webpack.config.js` files via `gulp.src`, then compiles via `webpack.watch`. Re-emits all data passed from `webpack.watch`. Can be piped.
-**Note**: Needs to be used after `webpack.configure` and `webpack.overrides`.
+**Note**: Needs to be used after `webpack.init` and `webpack.props`.
 
 **Kind**: static method of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
 
@@ -179,8 +200,8 @@ Re-uses existing `err` and `stats` objects. Can be piped.
 | err | <code>Error</code> | Error. |
 | stats | <code>Stats</code> | Stats. |
 
-<a name="module_gulp-webpack-build.overrides"></a>
-### gulp-webpack-build.overrides([options]) ⇒ <code>Stream</code>
+<a name="module_gulp-webpack-build.props"></a>
+### gulp-webpack-build.props([options]) ⇒ <code>Stream</code>
 Overrides existing properties of each `webpack.config.js` file. Can be piped.
 
 **Kind**: static method of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
@@ -189,9 +210,9 @@ Overrides existing properties of each `webpack.config.js` file. Can be piped.
 | --- | --- | --- |
 | [options] | <code>Configuration</code> | Options. |
 
-<a name="module_gulp-webpack-build.configure"></a>
-### gulp-webpack-build.configure([options]) ⇒ <code>Stream</code>
-Helps to configure `webpack` compiler. Can be piped.
+<a name="module_gulp-webpack-build.init"></a>
+### gulp-webpack-build.init([options]) ⇒ <code>Stream</code>
+Helps to init `webpack` compiler. Can be piped.
 
 **Kind**: static method of <code>[gulp-webpack-build](#module_gulp-webpack-build)</code>  
 
@@ -214,6 +235,12 @@ Called when `webpack.config.js` file is compiled. Will be passed `err` and `stat
 | err | <code>Error</code> | Error. |
 | stats | <code>Stats</code> | Stats. |
 
+<a name="external_Error"></a>
+## Error
+Error
+
+**Kind**: global external  
+**See**: [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error)  
 <a name="external_Stats"></a>
 ## Stats
 Stats
