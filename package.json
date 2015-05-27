@@ -53,5 +53,9 @@
     "tildify": "^1.0.0",
     "webpack": "^1.9.4",
     "webpack-config": "^0.7.0"
+  },
+  "peerDependencies": {
+    "webpack": "^1.9.4",
+    "webpack-config": "^0.7.0"
   }
 }
