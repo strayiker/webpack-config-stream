@@ -33,5 +33,5 @@ test/expected
 # Docs
 .gitdown/docs
 
-# IDE
+# Intellij
 .idea
