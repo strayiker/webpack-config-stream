@@ -79,8 +79,10 @@ gulp.task('watch', [], function() {
     });
 });
 
-gulp.task('clean', function(callback) {
-    del(path.join(paths.dest.test, '**'), callback);
+gulp.task('clean', function() {
+    return del([
+        path.join(paths.dest.test, '**')
+    ]);
 });
 
 gulp.task('gitdown:readme', function() {
