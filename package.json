@@ -49,7 +49,7 @@
     "gulp-util": "^3.0.4",
     "lodash": "^3.10.0",
     "memory-fs": "^0.2.0",
-    "through2": "^0.6.5",
+    "through2": "^2.0.0",
     "tildify": "^1.0.0",
     "webpack": "^1.12.0",
     "webpack-config": "^0.8.0"
