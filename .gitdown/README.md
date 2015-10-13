@@ -7,7 +7,7 @@ Helps to build bundles based on webpack configs
 
 ## Documentation
 
-For API docs please see the [documentation page]({"gitdown": "gitinfo", "name": "url"}/blob/master/docs/API.md)!
+For API docs please see the [documentation page]({"gitdown": "gitinfo", "name": "url"}/blob/{"gitdown": "gitinfo", "name": "branch"}/docs/API.md)!
 
 ## Sample
 
@@ -16,5 +16,5 @@ Here is a quick sample of what `gulp-webpack-build` does
 `gulpfile.js`
 
 ``` javascript
-{"gitdown": "include", "file": "samples/gulpfile.js"}
+{"gitdown": "include", "file": "docs/samples/gulpfile.js"}
 ```
