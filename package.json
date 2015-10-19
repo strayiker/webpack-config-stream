@@ -1,6 +1,5 @@
 {
-  "name": "gulp-webpack-build",
-  "version": "0.13.1",
+  "name": "webpack-config-stream",
   "description": "Helps to build bundles based on webpack configs",
   "main": "index.js",
   "files": [

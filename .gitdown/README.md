@@ -1,7 +1,7 @@
 {"gitdown": "badge", "name": "npm-version"} {"gitdown": "badge", "name": "travis"} {"gitdown": "badge", "name": "codeclimate-gpa"} {"gitdown": "badge", "name": "david"} {"gitdown": "badge", "name": "david-dev"}
 
-[gulp](https://github.com/gulpjs/gulp)-[webpack](https://github.com/webpack/webpack)-build
-==========================================================================================
+[webpack](https://github.com/webpack/webpack)-[config](https://github.com/mdreizin/webpack-config)-stream
+=========================================================================================================
 
 Helps to build bundles based on webpack configs
 
@@ -11,7 +11,7 @@ For API docs please see the [documentation page]({"gitdown": "gitinfo", "name": 
 
 ## Sample
 
-Here is a quick sample of what `gulp-webpack-build` does
+Here is a quick sample of what `webpack-config-stream` does:
 
 `gulpfile.js`
 

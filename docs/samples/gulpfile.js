@@ -2,25 +2,25 @@
 
 var path = require('path'),
     gulp = require('gulp'),
-    webpack = require('gulp-webpack-build');
+    webpack = require('webpack-config-stream');
 
 var src = './src',
     dest = './dist',
-    webpackOptions = {
+    webpackConfig = {
         debug: true,
         devtool: '#source-map',
         watchDelay: 200
     },
-    webpackConfig = {
+    webpackOptions = {
         useMemoryFs: true,
         progress: true
     },
-    CONFIG_FILENAME = webpack.config.CONFIG_FILENAME;
+    CONFIG_FILENAME = webpack.Config.FILENAME;
 
 gulp.task('webpack', [], function() {
     return gulp.src(path.join(src, '**', CONFIG_FILENAME), { base: path.resolve(src) })
-        .pipe(webpack.init(webpackConfig))
-        .pipe(webpack.props(webpackOptions))
+        .pipe(webpack.init(webpackOptions))
+        .pipe(webpack.props(webpackConfig))
         .pipe(webpack.run())
         .pipe(webpack.format({
             version: false,
@@ -38,8 +38,8 @@ gulp.task('watch', function() {
         if (event.type === 'changed') {
             gulp.src(event.path, { base: path.resolve(src) })
                 .pipe(webpack.closest(CONFIG_FILENAME))
-                .pipe(webpack.init(webpackConfig))
-                .pipe(webpack.props(webpackOptions))
+                .pipe(webpack.init(webpackOptions))
+                .pipe(webpack.props(webpackConfig))
                 .pipe(webpack.watch(function(err, stats) {
                     gulp.src(this.path, { base: this.base })
                         .pipe(webpack.proxy(err, stats))
