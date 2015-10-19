@@ -1,4 +1,4 @@
-[![NPM version](http://img.shields.io/npm/v/webpack-config-stream.svg?style=flat)](https://www.npmjs.org/package/webpack-config-stream) [![Travis build status](http://img.shields.io/travis/mdreizin/gulp-webpack-build/develop.svg?style=flat)](https://travis-ci.org/mdreizin/gulp-webpack-build) [![Code Climate](https://codeclimate.com/github/mdreizin/gulp-webpack-build/badges/gpa.svg)](https://codeclimate.com/github/mdreizin/gulp-webpack-build) [![Dependency Status](https://david-dm.org/mdreizin/gulp-webpack-build.svg?style=flat)](https://david-dm.org/mdreizin/gulp-webpack-build) [![Dependency Status](https://david-dm.org/mdreizin/gulp-webpack-build/dev-status.svg?style=flat)](https://david-dm.org/mdreizin/gulp-webpack-build#info=devDependencies)
+[![NPM version](http://img.shields.io/npm/v/webpack-config-stream.svg?style=flat)](https://www.npmjs.org/package/webpack-config-stream) [![Travis build status](http://img.shields.io/travis/mdreizin/webpack-config-stream/master.svg?style=flat)](https://travis-ci.org/mdreizin/webpack-config-stream) [![Code Climate](https://codeclimate.com/github/mdreizin/webpack-config-stream/badges/gpa.svg)](https://codeclimate.com/github/mdreizin/webpack-config-stream) [![Code Climate](https://codeclimate.com/github/mdreizin/webpack-config-stream/badges/coverage.svg)](https://codeclimate.com/github/mdreizin/webpack-config-stream) [![Dependency Status](https://david-dm.org/mdreizin/webpack-config-stream.svg?style=flat)](https://david-dm.org/mdreizin/webpack-config-stream) [![Dependency Status](https://david-dm.org/mdreizin/webpack-config-stream/dev-status.svg?style=flat)](https://david-dm.org/mdreizin/webpack-config-stream#info=devDependencies)
 
 [webpack](https://github.com/webpack/webpack)-[config](https://github.com/mdreizin/webpack-config)-stream
 =========================================================================================================
@@ -7,7 +7,7 @@ Helps to build bundles based on webpack configs
 
 <h2 id="documentation">Documentation</h2>
 
-For API docs please see the [documentation page](https://github.com/mdreizin/gulp-webpack-build/blob/develop/docs/API.md)!
+For API docs please see the [documentation page](https://github.com/mdreizin/webpack-config-stream/blob/master/docs/API.md)!
 
 <h2 id="sample">Sample</h2>
 
