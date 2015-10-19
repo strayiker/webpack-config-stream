@@ -12,6 +12,11 @@ cache:
     - bower_components
 notifications:
   email: false
+branches:
+  only:
+    - master
+  except:
+    - gh-pages
 before_install:
   - npm install
   - bower install
