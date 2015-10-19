@@ -18,32 +18,32 @@
         <h1>gulp-webpack-build</h1>
         <p>Helps to generate bundles based on webpack config</p>
 
-        <p class="view"><a href="https://github.com/mdreizin/gulp-webpack-build">View the Project on GitHub <small>mdreizin/gulp-webpack-build</small></a></p>
+        <p class="view"><a href="https://github.com/mdreizin/webpack-config-stream">View the Project on GitHub <small>mdreizin/webpack-config-stream</small></a></p>
 
 
         <ul>
-          <li><a href="https://github.com/mdreizin/gulp-webpack-build/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/mdreizin/gulp-webpack-build/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/mdreizin/gulp-webpack-build">View On <strong>GitHub</strong></a></li>
+          <li><a href="https://github.com/mdreizin/webpack-config-stream/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mdreizin/webpack-config-stream/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mdreizin/webpack-config-stream">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
       <section>
-        <p><a href="https://www.npmjs.org/package/gulp-webpack-build"><img src="http://img.shields.io/npm/v/gulp-webpack-build.svg?style=flat" alt="NPM version"></a> <a href="https://travis-ci.org/mdreizin/gulp-webpack-build"><img src="http://img.shields.io/travis/mdreizin/gulp-webpack-build/master.svg?style=flat" alt="Travis build status"></a> <a href="https://codeclimate.com/github/mdreizin/gulp-webpack-build"><img src="https://codeclimate.com/github/mdreizin/gulp-webpack-build/badges/gpa.svg" alt="Code Climate"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build"><img src="https://david-dm.org/mdreizin/gulp-webpack-build.svg?style=flat" alt="Dependency Status"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build#info=devDependencies"><img src="https://david-dm.org/mdreizin/gulp-webpack-build/dev-status.svg?style=flat" alt="Dependency Status"></a></p>
+        <p><a href="https://www.npmjs.org/package/webpack-config-stream"><img src="http://img.shields.io/npm/v/webpack-config-stream.svg?style=flat" alt="NPM version"></a> <a href="https://travis-ci.org/mdreizin/gulp-webpack-build"><img src="http://img.shields.io/travis/mdreizin/gulp-webpack-build/develop.svg?style=flat" alt="Travis build status"></a> <a href="https://codeclimate.com/github/mdreizin/gulp-webpack-build"><img src="https://codeclimate.com/github/mdreizin/gulp-webpack-build/badges/gpa.svg" alt="Code Climate"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build"><img src="https://david-dm.org/mdreizin/gulp-webpack-build.svg?style=flat" alt="Dependency Status"></a> <a href="https://david-dm.org/mdreizin/gulp-webpack-build#info=devDependencies"><img src="https://david-dm.org/mdreizin/gulp-webpack-build/dev-status.svg?style=flat" alt="Dependency Status"></a></p>
 
 <h1>
-<a id="gulp-webpack-build" class="anchor" href="#gulp-webpack-build" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/gulpjs/gulp">gulp</a>-<a href="https://github.com/webpack/webpack">webpack</a>-build</h1>
+<a id="webpack-config-stream" class="anchor" href="#webpack-config-stream" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/webpack/webpack">webpack</a>-<a href="https://github.com/mdreizin/webpack-config">config</a>-stream</h1>
 
 <p>Helps to build bundles based on webpack configs</p>
 
 <h2 id="documentation">
 <a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
 
-<p>For API docs please see the <a href="https://github.com/mdreizin/gulp-webpack-build/blob/master/docs/API.md">documentation page</a>!</p>
+<p>For API docs please see the <a href="https://github.com/mdreizin/gulp-webpack-build/blob/develop/docs/API.md">documentation page</a>!</p>
 
 <h2 id="sample">
 <a id="sample" class="anchor" href="#sample" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sample</h2>
 
-<p>Here is a quick sample of what <code>gulp-webpack-build</code> does</p>
+<p>Here is a quick sample of what <code>webpack-config-stream</code> does:</p>
 
 <p><code>gulpfile.js</code></p>
 
@@ -51,25 +51,25 @@
 
 <span class="pl-k">var</span> path <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>path<span class="pl-pds">'</span></span>),
     gulp <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>gulp<span class="pl-pds">'</span></span>),
-    webpack <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>gulp-webpack-build<span class="pl-pds">'</span></span>);
+    webpack <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>webpack-config-stream<span class="pl-pds">'</span></span>);
 
 <span class="pl-k">var</span> src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>./src<span class="pl-pds">'</span></span>,
     dest <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>./dist<span class="pl-pds">'</span></span>,
-    webpackOptions <span class="pl-k">=</span> {
+    webpackConfig <span class="pl-k">=</span> {
         debug<span class="pl-k">:</span> <span class="pl-c1">true</span>,
         devtool<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>#source-map<span class="pl-pds">'</span></span>,
         watchDelay<span class="pl-k">:</span> <span class="pl-c1">200</span>
     },
-    webpackConfig <span class="pl-k">=</span> {
+    webpackOptions <span class="pl-k">=</span> {
         useMemoryFs<span class="pl-k">:</span> <span class="pl-c1">true</span>,
         progress<span class="pl-k">:</span> <span class="pl-c1">true</span>
     },
-    <span class="pl-c1">CONFIG_FILENAME</span> <span class="pl-k">=</span> webpack.config.CONFIG_FILENAME;
+    <span class="pl-c1">CONFIG_FILENAME</span> <span class="pl-k">=</span> webpack.Config.FILENAME;
 
 gulp.task(<span class="pl-s"><span class="pl-pds">'</span>webpack<span class="pl-pds">'</span></span>, [], <span class="pl-k">function</span>() {
     <span class="pl-k">return</span> gulp.src(path.<span class="pl-c1">join</span>(src, <span class="pl-s"><span class="pl-pds">'</span>**<span class="pl-pds">'</span></span>, <span class="pl-c1">CONFIG_FILENAME</span>), { base<span class="pl-k">:</span> path.resolve(src) })
-        .pipe(webpack.init(webpackConfig))
-        .pipe(webpack.props(webpackOptions))
+        .pipe(webpack.init(webpackOptions))
+        .pipe(webpack.props(webpackConfig))
         .pipe(webpack.run())
         .pipe(webpack.format({
             version<span class="pl-k">:</span> <span class="pl-c1">false</span>,
@@ -87,8 +87,8 @@ gulp.task(<span class="pl-s"><span class="pl-pds">'</span>watch<span class="pl-p
         <span class="pl-k">if</span> (<span class="pl-c1">event</span>.<span class="pl-c1">type</span> <span class="pl-k">===</span> <span class="pl-s"><span class="pl-pds">'</span>changed<span class="pl-pds">'</span></span>) {
             gulp.src(<span class="pl-c1">event</span>.path, { base<span class="pl-k">:</span> path.resolve(src) })
                 .pipe(webpack.closest(<span class="pl-c1">CONFIG_FILENAME</span>))
-                .pipe(webpack.init(webpackConfig))
-                .pipe(webpack.props(webpackOptions))
+                .pipe(webpack.init(webpackOptions))
+                .pipe(webpack.props(webpackConfig))
                 .pipe(webpack.<span class="pl-c1">watch</span>(<span class="pl-k">function</span>(<span class="pl-smi">err</span>, <span class="pl-smi">stats</span>) {
                     gulp.src(<span class="pl-v">this</span>.path, { base<span class="pl-k">:</span> <span class="pl-v">this</span>.base })
                         .pipe(webpack.proxy(err, stats))
