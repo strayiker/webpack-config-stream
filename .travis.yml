@@ -31,6 +31,6 @@ script:
   - npm run clean
   - npm run cover
 after_success:
-  - 'if [[ $TRAVIS_BRANCH == "master" ]]; then npm run doc; fi'
+  - npm run doc
   - npm run codeclimate
   - npm run semantic-release
