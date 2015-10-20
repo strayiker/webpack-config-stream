@@ -13,7 +13,6 @@ os:
 cache:
   directories:
     - node_modules
-    - bower_components
 notifications:
   email: false
 branches:
@@ -23,7 +22,6 @@ branches:
     - gh-pages
 before_install:
   - npm install
-  - bower install
 before_script:
   - npm dedupe
   - npm prune
