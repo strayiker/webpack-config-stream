@@ -19,14 +19,12 @@ describe('failAfterStream', function () {
                 warnings: true
             });
 
-        failAfter.on('data', function() {
-            this.on('error', function(err) {
-                expect(err.message).to.contain(failAfterStream.MESSAGE);
+        failAfter.on('error', function(err) {
+            expect(err.message).to.contain(failAfterStream.MESSAGE);
 
-                done();
-            });
+            done();
         });
 
-        entry.pipe(init).pipe(run).pipe(failAfter);
+        entry.pipe(init).pipe(run).pipe(failAfter).resume();
     });
 });
