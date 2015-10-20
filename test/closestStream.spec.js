@@ -54,6 +54,6 @@ describe('closestStream', function () {
             done();
         });
 
-        entry.pipe(closest);
+        entry.pipe(closest).resume();
     });
 });
