@@ -3,26 +3,25 @@
 var expect = require('expect.js'),
     _ = require('lodash'),
     fs = require('vinyl-fs'),
+    gutil = require('gulp-util'),
     initStream = require('../lib/initStream'),
     runStream = require('../lib/runStream'),
     formatStream = require('../lib/formatStream');
 
 describe('formatStream', function () {
-    var log = console.log,
+    var log = gutil.log,
         buffer = [];
 
     beforeEach(function() {
-        console.log = function() {
+        gutil.log = function() {
             buffer = _.union(buffer, _.toArray(arguments));
-
-            return log.apply(console, arguments);
         };
     });
 
     afterEach(function() {
         buffer = [];
 
-        console.log = log;
+        gutil.log = log;
     });
 
     it('should call "stats.toString()"', function(done) {
