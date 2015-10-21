@@ -43,7 +43,7 @@
 <dt><a href="#propsStream">propsStream([options])</a> ⇒ <code>Stream</code></dt>
 <dd><p>Overrides existing properties of each <code>webpack.config.js</code> file. Can be piped.</p>
 </dd>
-<dt><a href="#proxyStream">proxyStream(err, [stats])</a> ⇒ <code>Stream</code></dt>
+<dt><a href="#proxyStream">proxyStream([err], [stats])</a> ⇒ <code>Stream</code></dt>
 <dd><p>Re-uses existing <code>err</code> and <code>stats</code> objects. Can be piped.</p>
 </dd>
 <dt><a href="#runStream">runStream([callback])</a> ⇒ <code>Stream</code></dt>
@@ -272,14 +272,14 @@ Overrides existing properties of each `webpack.config.js` file. Can be piped.
 | [options] | <code>Configuration</code> | 
 
 <a name="proxyStream"></a>
-## proxyStream(err, [stats]) ⇒ <code>Stream</code>
+## proxyStream([err], [stats]) ⇒ <code>Stream</code>
 Re-uses existing `err` and `stats` objects. Can be piped.
 
 **Kind**: global function  
 
 | Param | Type |
 | --- | --- |
-| err | <code>Error</code> | 
+| [err] | <code>Error</code> | 
 | [stats] | <code>Stats</code> | 
 
 <a name="runStream"></a>
