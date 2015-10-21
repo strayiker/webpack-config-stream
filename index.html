@@ -55,12 +55,12 @@
 
 <span class="pl-k">var</span> src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>./src<span class="pl-pds">'</span></span>,
     dest <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>./dist<span class="pl-pds">'</span></span>,
-    webpackConfig <span class="pl-k">=</span> {
+    configOptions <span class="pl-k">=</span> {
         debug<span class="pl-k">:</span> <span class="pl-c1">true</span>,
         devtool<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>#source-map<span class="pl-pds">'</span></span>,
         watchDelay<span class="pl-k">:</span> <span class="pl-c1">200</span>
     },
-    webpackOptions <span class="pl-k">=</span> {
+    compilerOptions <span class="pl-k">=</span> {
         useMemoryFs<span class="pl-k">:</span> <span class="pl-c1">true</span>,
         progress<span class="pl-k">:</span> <span class="pl-c1">true</span>
     },
@@ -68,8 +68,8 @@
 
 gulp.task(<span class="pl-s"><span class="pl-pds">'</span>webpack<span class="pl-pds">'</span></span>, [], <span class="pl-k">function</span>() {
     <span class="pl-k">return</span> gulp.src(path.<span class="pl-c1">join</span>(src, <span class="pl-s"><span class="pl-pds">'</span>**<span class="pl-pds">'</span></span>, <span class="pl-c1">CONFIG_FILENAME</span>), { base<span class="pl-k">:</span> path.resolve(src) })
-        .pipe(webpack.init(webpackOptions))
-        .pipe(webpack.props(webpackConfig))
+        .pipe(webpack.init(compilerOptions))
+        .pipe(webpack.props(configOptions))
         .pipe(webpack.run())
         .pipe(webpack.format({
             version<span class="pl-k">:</span> <span class="pl-c1">false</span>,
@@ -87,8 +87,8 @@ gulp.task(<span class="pl-s"><span class="pl-pds">'</span>watch<span class="pl-p
         <span class="pl-k">if</span> (<span class="pl-c1">event</span>.<span class="pl-c1">type</span> <span class="pl-k">===</span> <span class="pl-s"><span class="pl-pds">'</span>changed<span class="pl-pds">'</span></span>) {
             gulp.src(<span class="pl-c1">event</span>.path, { base<span class="pl-k">:</span> path.resolve(src) })
                 .pipe(webpack.closest(<span class="pl-c1">CONFIG_FILENAME</span>))
-                .pipe(webpack.init(webpackOptions))
-                .pipe(webpack.props(webpackConfig))
+                .pipe(webpack.init(compilerOptions))
+                .pipe(webpack.props(configOptions))
                 .pipe(webpack.<span class="pl-c1">watch</span>(<span class="pl-k">function</span>(<span class="pl-smi">err</span>, <span class="pl-smi">stats</span>) {
                     gulp.src(<span class="pl-v">this</span>.path, { base<span class="pl-k">:</span> <span class="pl-v">this</span>.base })
                         .pipe(webpack.proxy(err, stats))
