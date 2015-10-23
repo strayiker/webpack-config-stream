@@ -30,17 +30,17 @@ describe('formatStream', function () {
                 useMemoryFs: true,
                 progress: false
             }),
-            run = runStream(function() {
-                expect(buffer).to.contain(formatStream.MESSAGE);
-                expect(buffer).to.match(/Hash/);
-                expect(buffer).to.match(/Time/);
-
-                done();
-            }),
+            run = runStream(),
             format = formatStream({
                 verbose: true
             });
 
-        entry.pipe(init).pipe(run).pipe(format).resume();
+        entry.pipe(init).pipe(run).pipe(format).on('end', function() {
+            expect(buffer).to.contain(formatStream.MESSAGE);
+            expect(buffer).to.match(/Hash/);
+            expect(buffer).to.match(/Time/);
+
+            done();
+        }).resume();
     });
 });
