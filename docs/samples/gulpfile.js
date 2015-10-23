@@ -6,12 +6,12 @@ var path = require('path'),
 
 var src = './src',
     dest = './dist',
-    webpackConfig = {
+    configOptions = {
         debug: true,
         devtool: '#source-map',
         watchDelay: 200
     },
-    webpackOptions = {
+    compilerOptions = {
         useMemoryFs: true,
         progress: true
     },
@@ -19,8 +19,8 @@ var src = './src',
 
 gulp.task('webpack', [], function() {
     return gulp.src(path.join(src, '**', CONFIG_FILENAME), { base: path.resolve(src) })
-        .pipe(webpack.init(webpackOptions))
-        .pipe(webpack.props(webpackConfig))
+        .pipe(webpack.init(compilerOptions))
+        .pipe(webpack.props(configOptions))
         .pipe(webpack.run())
         .pipe(webpack.format({
             version: false,
@@ -38,8 +38,8 @@ gulp.task('watch', function() {
         if (event.type === 'changed') {
             gulp.src(event.path, { base: path.resolve(src) })
                 .pipe(webpack.closest(CONFIG_FILENAME))
-                .pipe(webpack.init(webpackOptions))
-                .pipe(webpack.props(webpackConfig))
+                .pipe(webpack.init(compilerOptions))
+                .pipe(webpack.props(configOptions))
                 .pipe(webpack.watch(function(err, stats) {
                     gulp.src(this.path, { base: this.base })
                         .pipe(webpack.proxy(err, stats))

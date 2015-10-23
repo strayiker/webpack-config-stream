@@ -1,4 +1,4 @@
-[![NPM version](http://img.shields.io/npm/v/webpack-config-stream.svg?style=flat)](https://www.npmjs.org/package/webpack-config-stream) [![Travis build status](http://img.shields.io/travis/mdreizin/webpack-config-stream/master.svg?style=flat)](https://travis-ci.org/mdreizin/webpack-config-stream) [![Code Climate](https://codeclimate.com/github/mdreizin/webpack-config-stream/badges/gpa.svg)](https://codeclimate.com/github/mdreizin/webpack-config-stream) [![Code Climate](https://codeclimate.com/github/mdreizin/webpack-config-stream/badges/coverage.svg)](https://codeclimate.com/github/mdreizin/webpack-config-stream) [![Dependency Status](https://david-dm.org/mdreizin/webpack-config-stream.svg?style=flat)](https://david-dm.org/mdreizin/webpack-config-stream) [![Dependency Status](https://david-dm.org/mdreizin/webpack-config-stream/dev-status.svg?style=flat)](https://david-dm.org/mdreizin/webpack-config-stream#info=devDependencies)
+[![NPM version](http://img.shields.io/npm/v/webpack-config-stream.svg?style=flat)](https://www.npmjs.org/package/webpack-config-stream) [![Travis build status](http://img.shields.io/travis/mdreizin/webpack-config-stream/master.svg?style=flat)](https://travis-ci.org/mdreizin/webpack-config-stream) [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/mdreizin/webpack-config-stream?svg=true&branch=master)](https://ci.appveyor.com/project/mdreizin/webpack-config-stream) [![Code Climate](https://codeclimate.com/github/mdreizin/webpack-config-stream/badges/gpa.svg)](https://codeclimate.com/github/mdreizin/webpack-config-stream) [![Code Climate](https://codeclimate.com/github/mdreizin/webpack-config-stream/badges/coverage.svg)](https://codeclimate.com/github/mdreizin/webpack-config-stream) [![Dependency Status](https://david-dm.org/mdreizin/webpack-config-stream.svg?style=flat)](https://david-dm.org/mdreizin/webpack-config-stream) [![Dependency Status](https://david-dm.org/mdreizin/webpack-config-stream/dev-status.svg?style=flat)](https://david-dm.org/mdreizin/webpack-config-stream#info=devDependencies)
 
 [webpack](https://github.com/webpack/webpack)-[config](https://github.com/mdreizin/webpack-config)-stream
 =========================================================================================================
@@ -24,12 +24,12 @@ var path = require('path'),
 
 var src = './src',
     dest = './dist',
-    webpackConfig = {
+    configOptions = {
         debug: true,
         devtool: '#source-map',
         watchDelay: 200
     },
-    webpackOptions = {
+    compilerOptions = {
         useMemoryFs: true,
         progress: true
     },
@@ -37,8 +37,8 @@ var src = './src',
 
 gulp.task('webpack', [], function() {
     return gulp.src(path.join(src, '**', CONFIG_FILENAME), { base: path.resolve(src) })
-        .pipe(webpack.init(webpackOptions))
-        .pipe(webpack.props(webpackConfig))
+        .pipe(webpack.init(compilerOptions))
+        .pipe(webpack.props(configOptions))
         .pipe(webpack.run())
         .pipe(webpack.format({
             version: false,
@@ -56,8 +56,8 @@ gulp.task('watch', function() {
         if (event.type === 'changed') {
             gulp.src(event.path, { base: path.resolve(src) })
                 .pipe(webpack.closest(CONFIG_FILENAME))
-                .pipe(webpack.init(webpackOptions))
-                .pipe(webpack.props(webpackConfig))
+                .pipe(webpack.init(compilerOptions))
+                .pipe(webpack.props(configOptions))
                 .pipe(webpack.watch(function(err, stats) {
                     gulp.src(this.path, { base: this.base })
                         .pipe(webpack.proxy(err, stats))

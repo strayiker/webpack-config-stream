@@ -16,4 +16,13 @@ describe('proxyStream', function () {
             done();
         });
     });
+
+    it('should call "end()" when "err" and "stats" are not defined', function(done) {
+        var entry = fs.src(__filename),
+            proxy = proxyStream();
+
+        entry.pipe(proxy).on('end', function() {
+            done();
+        }).resume();
+    });
 });
