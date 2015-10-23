@@ -30,6 +30,6 @@ describe('runStream', function () {
                 done();
             });
 
-        entry.pipe(init).pipe(run);
+        entry.pipe(init).pipe(run).resume();
     });
 });

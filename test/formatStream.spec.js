@@ -41,6 +41,6 @@ describe('formatStream', function () {
                 verbose: true
             });
 
-        entry.pipe(init).pipe(run).pipe(format);
+        entry.pipe(init).pipe(run).pipe(format).resume();
     });
 });

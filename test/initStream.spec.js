@@ -23,6 +23,6 @@ describe('initStream', function () {
             done();
         });
 
-        entry.pipe(init);
+        entry.pipe(init).resume();
     });
 });

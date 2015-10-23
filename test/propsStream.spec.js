@@ -20,6 +20,6 @@ describe('propsStream', function () {
             done();
         });
 
-        entry.pipe(props);
+        entry.pipe(props).resume();
     });
 });
