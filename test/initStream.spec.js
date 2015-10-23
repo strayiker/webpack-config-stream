@@ -6,7 +6,7 @@ var expect = require('expect.js'),
     progressCallback = require('../lib/progressCallback');
 
 describe('initStream', function () {
-    it('should set options', function(done) {
+    it('should init options', function(done) {
         var options = {
                 useMemoryFs: true,
                 progress: true
@@ -19,6 +19,19 @@ describe('initStream', function () {
                 useMemoryFs: true,
                 progress: progressCallback
             });
+
+            done();
+        });
+
+        entry.pipe(init).resume();
+    });
+
+    it('should init empty options', function(done) {
+        var entry = fs.src('test/fixtures/initStream/webpack.config.js'),
+            init = initStream();
+
+        init.on('data', function(chunk) {
+            expect(chunk[initStream.FIELD_NAME]).to.eql({});
 
             done();
         });
