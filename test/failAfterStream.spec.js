@@ -13,7 +13,7 @@ describe('failAfterStream', function () {
                 useMemoryFs: true,
                 progress: false
             }),
-            run = runStream(function() {}),
+            run = runStream(),
             failAfter = failAfterStream({
                 errors: true,
                 warnings: true
