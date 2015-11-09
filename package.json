@@ -57,6 +57,7 @@
     "lodash": "^3.10.0",
     "memory-fs": "^0.2.0",
     "minimatch": "^3.0.0",
+    "progress": "^1.1.8",
     "through2": "^2.0.0",
     "tildify": "^1.0.0",
     "webpack": "^1.12.0",
