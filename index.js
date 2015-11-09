@@ -9,7 +9,8 @@ var webpack = require('webpack'),
     watchStream = require('./lib/watchStream'),
     proxyStream = require('./lib/proxyStream'),
     propsStream = require('./lib/propsStream'),
-    initStream = require('./lib/initStream');
+    initStream = require('./lib/initStream'),
+    ignoreStream = require('./lib/ignoreStream');
 
 /**
  * Called when `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
@@ -123,6 +124,12 @@ index.props = propsStream;
  * @static
  */
 index.init = initStream;
+
+/**
+ * @property {ignoreStream}
+ * @static
+ */
+index.ignore = ignoreStream;
 
 /**
  * @property {Webpack}
