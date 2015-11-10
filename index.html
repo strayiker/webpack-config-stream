@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -79,6 +79,7 @@ gulp.task(<span class="pl-s"><span class="pl-pds">'</span>webpack<span class="pl
             errors<span class="pl-k">:</span> <span class="pl-c1">true</span>,
             warnings<span class="pl-k">:</span> <span class="pl-c1">true</span>
         }))
+        .pipe(webpack.ignore())
         .pipe(gulp.dest(dest));
 });
 
@@ -96,6 +97,7 @@ gulp.task(<span class="pl-s"><span class="pl-pds">'</span>watch<span class="pl-p
                             verbose<span class="pl-k">:</span> <span class="pl-c1">true</span>,
                             version<span class="pl-k">:</span> <span class="pl-c1">false</span>
                         }))
+                        .pipe(webpack.ignore())
                         .pipe(gulp.dest(dest));
                 }));
         }
