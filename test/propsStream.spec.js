@@ -5,7 +5,7 @@ var expect = require('expect.js'),
     propsStream = require('../lib/propsStream');
 
 describe('propsStream', function () {
-    it('should set options', function(done) {
+    it('should init options', function(done) {
         var options = {
                 debug: true,
                 devtool: '#source-map',
@@ -20,6 +20,6 @@ describe('propsStream', function () {
             done();
         });
 
-        entry.pipe(props);
+        entry.pipe(props).resume();
     });
 });

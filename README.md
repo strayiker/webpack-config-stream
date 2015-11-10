@@ -48,6 +48,7 @@ gulp.task('webpack', [], function() {
             errors: true,
             warnings: true
         }))
+        .pipe(webpack.ignore())
         .pipe(gulp.dest(dest));
 });
 
@@ -65,6 +66,7 @@ gulp.task('watch', function() {
                             verbose: true,
                             version: false
                         }))
+                        .pipe(webpack.ignore())
                         .pipe(gulp.dest(dest));
                 }));
         }

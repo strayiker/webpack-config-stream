@@ -30,6 +30,6 @@ describe('watchStream', function () {
                 done();
             });
 
-        entry.pipe(init).pipe(watch);
+        entry.pipe(init).pipe(watch).resume();
     });
 });

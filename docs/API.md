@@ -8,6 +8,8 @@
 <dd></dd>
 <dt><a href="#module_webpack-config-stream/lib/formatStream">webpack-config-stream/lib/formatStream</a> ⇒ <code><a href="#formatStream">formatStream</a></code></dt>
 <dd></dd>
+<dt><a href="#module_webpack-config-stream/lib/ignoreStream">webpack-config-stream/lib/ignoreStream</a> ⇒ <code><a href="#ignoreStream">ignoreStream</a></code></dt>
+<dd></dd>
 <dt><a href="#module_webpack-config-stream/lib/initStream">webpack-config-stream/lib/initStream</a> ⇒ <code><a href="#initStream">initStream</a></code></dt>
 <dd></dd>
 <dt><a href="#module_webpack-config-stream/lib/propsStream">webpack-config-stream/lib/propsStream</a> ⇒ <code><a href="#propsStream">propsStream</a></code></dt>
@@ -36,6 +38,9 @@
 </dd>
 <dt><a href="#formatStream">formatStream([options])</a> ⇒ <code>Stream</code></dt>
 <dd><p>Writes formatted string of <code>stats</code> object and displays related <code>webpack.config.js</code> file path. Can be piped.</p>
+</dd>
+<dt><a href="#ignoreStream">ignoreStream([pattern])</a> ⇒ <code>Stream</code></dt>
+<dd><p>Prevents writing of <code>webpack.config.js</code>. Can be piped.</p>
 </dd>
 <dt><a href="#initStream">initStream([options])</a> ⇒ <code>Stream</code></dt>
 <dd><p>Helps to init <code>webpack</code> compiler. Can be piped.</p>
@@ -97,6 +102,8 @@
 ## webpack-config-stream/lib/failAfterStream ⇒ <code>[failAfterStream](#failAfterStream)</code>
 <a name="module_webpack-config-stream/lib/formatStream"></a>
 ## webpack-config-stream/lib/formatStream ⇒ <code>[formatStream](#formatStream)</code>
+<a name="module_webpack-config-stream/lib/ignoreStream"></a>
+## webpack-config-stream/lib/ignoreStream ⇒ <code>[ignoreStream](#ignoreStream)</code>
 <a name="module_webpack-config-stream/lib/initStream"></a>
 ## webpack-config-stream/lib/initStream ⇒ <code>[initStream](#initStream)</code>
 <a name="module_webpack-config-stream/lib/propsStream"></a>
@@ -120,6 +127,7 @@
   * [.proxy](#index.proxy)
   * [.props](#index.props)
   * [.init](#index.init)
+  * [.ignore](#index.ignore)
   * [.webpack](#index.webpack)
   * [.Config](#index.Config)
 
@@ -195,6 +203,15 @@
 | --- |
 | <code>[initStream](#initStream)</code> | 
 
+<a name="index.ignore"></a>
+### index.ignore
+**Kind**: static property of <code>[index](#index)</code>  
+**Properties**
+
+| Type |
+| --- |
+| <code>[ignoreStream](#ignoreStream)</code> | 
+
 <a name="index.webpack"></a>
 ### index.webpack
 **Kind**: static property of <code>[index](#index)</code>  
@@ -248,6 +265,16 @@ Writes formatted string of `stats` object and displays related `webpack.config.j
 | --- | --- | --- | --- |
 | [options] | <code>Object</code> |  | Options to pass to [`stats.toString()`](http://webpack.github.io/docs/node.js-api.html#stats-tostring). |
 | [options.verbose] | <code>Boolean</code> | <code>false</code> | Writes fully formatted version of `stats` object. |
+
+<a name="ignoreStream"></a>
+## ignoreStream([pattern]) ⇒ <code>Stream</code>
+Prevents writing of `webpack.config.js`. Can be piped.
+
+**Kind**: global function  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [pattern] | <code>String</code> | <code>&#x27;webpack.config.js&#x27;</code> | `minimatch` [pattern](https://github.com/isaacs/minimatch#features). |
 
 <a name="initStream"></a>
 ## initStream([options]) ⇒ <code>Stream</code>

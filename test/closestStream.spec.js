@@ -20,7 +20,7 @@ describe('closestStream', function () {
             done();
         });
 
-        entry.pipe(closest);
+        entry.pipe(closest).resume();
     });
 
     it('should find closest config by custom name', function(done) {
@@ -36,7 +36,7 @@ describe('closestStream', function () {
             done();
         });
 
-        entry.pipe(closest);
+        entry.pipe(closest).resume();
     });
 
     it('should not find closest config when it does not exist', function(done) {

@@ -14,15 +14,13 @@ describe('proxyStream', function () {
             expect(err.message).to.eql(error.message);
 
             done();
-        });
+        }).resume();
     });
 
     it('should call "end()" when "err" and "stats" are not defined', function(done) {
         var entry = fs.src(__filename),
             proxy = proxyStream();
 
-        entry.pipe(proxy).on('end', function() {
-            done();
-        }).resume();
+        entry.pipe(proxy).on('end', done).resume();
     });
 });
