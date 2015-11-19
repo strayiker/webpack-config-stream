@@ -17,7 +17,7 @@ describe('ignoreStream', function () {
             ignore = ignoreStream();
 
         ignore.on('data', function(chunk) {
-            files.push(chunk.path);
+            files.push(path.resolve(chunk.path));
         });
 
         entry.pipe(ignore).on('end', function() {
@@ -32,7 +32,7 @@ describe('ignoreStream', function () {
             ignore = ignoreStream('webpack*config.js');
 
         ignore.on('data', function(chunk) {
-            files.push(chunk.path);
+            files.push(path.resolve(chunk.path));
         });
 
         entry.pipe(ignore).on('end', function() {
