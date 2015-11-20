@@ -12,12 +12,12 @@ describe('ignoreStream', function () {
         files = [];
     });
 
-    it('should ignore "webpack.config.js"', function(done) {
+    it('should ignore `webpack.config.js`', function(done) {
         var entry = fs.src('test/fixtures/ignoreStream/webpack.config.js'),
             ignore = ignoreStream();
 
         ignore.on('data', function(chunk) {
-            files.push(chunk.path);
+            files.push(path.resolve(chunk.path));
         });
 
         entry.pipe(ignore).on('end', function() {
@@ -27,12 +27,12 @@ describe('ignoreStream', function () {
         }).resume();
     });
 
-    it('should ignore "webpack*config.js"', function(done) {
+    it('should ignore `webpack*config.js`', function(done) {
         var entry = fs.src(['test/fixtures/ignoreStream/index.js', 'test/fixtures/ignoreStream/webpack*config.js']),
             ignore = ignoreStream('webpack*config.js');
 
         ignore.on('data', function(chunk) {
-            files.push(chunk.path);
+            files.push(path.resolve(chunk.path));
         });
 
         entry.pipe(ignore).on('end', function() {

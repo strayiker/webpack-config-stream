@@ -17,14 +17,14 @@ var SIMPLE_CONFIG = {
 };
 
 describe('ConfigFactory', function () {
-    it('should load "Config"', function() {
+    it('should load `Config`', function() {
         var config = configFactory(SIMPLE_FILENAME);
 
         expect(config).to.be.an(WebpackConfig);
         expect(config.toObject()).to.eql(SIMPLE_CONFIG);
     });
 
-    it('should load "Config" and override existing properties', function() {
+    it('should load `Config` and override existing properties', function() {
         var config = configFactory(SIMPLE_FILENAME, {
             foo: 'bar'
         });
@@ -35,7 +35,7 @@ describe('ConfigFactory', function () {
         }));
     });
 
-    it('should load "Config[]"', function() {
+    it('should load `Config[]`', function() {
         var configs = configFactory(ARRAY_FILENAME),
             config = configs[0];
 
@@ -44,7 +44,7 @@ describe('ConfigFactory', function () {
         expect(config.toObject()).to.eql(SIMPLE_CONFIG);
     });
 
-    it('should load "Config[]" and override existing properties', function() {
+    it('should load `Config[]` and override existing properties', function() {
         var configs = configFactory(ARRAY_FILENAME, {
                 foo: 'bar'
             }),
