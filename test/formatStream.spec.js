@@ -24,7 +24,7 @@ describe('formatStream', function () {
         gutil.log = log;
     });
 
-    it('should call "stats.toString()"', function(done) {
+    it('should call `stats.toString()`', function(done) {
         var entry = fs.src('test/fixtures/formatStream/webpack.config.js'),
             init = initStream({
                 useMemoryFs: true,

@@ -35,7 +35,7 @@ describe('CompilerAdapter', function () {
             });
         });
 
-        it('should throw error when "callback" is not "Function"', function() {
+        it('should throw error when `callback` is not `Function`', function() {
             expect(compilerAdapter.run).withArgs(file).to.throwError();
         });
     });
@@ -56,7 +56,7 @@ describe('CompilerAdapter', function () {
             });
         });
 
-        it('should throw error when "callback" is not "Function"', function() {
+        it('should throw error when `callback` is not `Function`', function() {
             expect(compilerAdapter.watch).withArgs(file).to.throwError();
         });
     });

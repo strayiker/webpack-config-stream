@@ -12,7 +12,7 @@ describe('ignoreStream', function () {
         files = [];
     });
 
-    it('should ignore "webpack.config.js"', function(done) {
+    it('should ignore `webpack.config.js`', function(done) {
         var entry = fs.src('test/fixtures/ignoreStream/webpack.config.js'),
             ignore = ignoreStream();
 
@@ -27,7 +27,7 @@ describe('ignoreStream', function () {
         }).resume();
     });
 
-    it('should ignore "webpack*config.js"', function(done) {
+    it('should ignore `webpack*config.js`', function(done) {
         var entry = fs.src(['test/fixtures/ignoreStream/index.js', 'test/fixtures/ignoreStream/webpack*config.js']),
             ignore = ignoreStream('webpack*config.js');
 

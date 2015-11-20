@@ -17,7 +17,7 @@ describe('proxyStream', function () {
         }).resume();
     });
 
-    it('should call "end()" when "err" and "stats" are not defined', function(done) {
+    it('should call `end()` when `err` and `stats` are not defined', function(done) {
         var entry = fs.src(__filename),
             proxy = proxyStream();
 
