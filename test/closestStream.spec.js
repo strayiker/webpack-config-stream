@@ -2,7 +2,6 @@
 
 var path = require('path'),
     _ = require('lodash'),
-    expect = require('expect.js'),
     fs = require('vinyl-fs'),
     WebpackConfig = require('webpack-config'),
     closestStream = require('../lib/closestStream');
@@ -15,7 +14,7 @@ describe('closestStream', function () {
         closest.on('data', function(chunk) {
             var filename = path.resolve(path.join('test/fixtures/closestStream', WebpackConfig.FILENAME));
 
-            expect(chunk.history).to.contain(filename);
+            expect(chunk.history).toContain(filename);
 
             done();
         });
@@ -31,7 +30,7 @@ describe('closestStream', function () {
         closest.on('data', function(chunk) {
             var filename = path.resolve(path.join('test/fixtures/closestStream/dir1', basename));
 
-            expect(chunk.history).to.contain(filename);
+            expect(chunk.history).toContain(filename);
 
             done();
         });
@@ -49,7 +48,7 @@ describe('closestStream', function () {
         });
 
         entry.on('end', function() {
-            expect(filename).to.be(undefined);
+            expect(filename).toEqual(undefined);
 
             done();
         });

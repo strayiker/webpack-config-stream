@@ -1,7 +1,6 @@
 'use strict';
 
-var expect = require('expect.js'),
-    path = require('path'),
+var path = require('path'),
     fs = require('vinyl-fs'),
     ignoreStream = require('../lib/ignoreStream');
 
@@ -21,7 +20,7 @@ describe('ignoreStream', function () {
         });
 
         entry.pipe(ignore).on('end', function() {
-            expect(files).to.be.empty();
+            expect(files.length).toEqual(0);
 
             done();
         }).resume();
@@ -36,7 +35,7 @@ describe('ignoreStream', function () {
         });
 
         entry.pipe(ignore).on('end', function() {
-            expect(files).to.eql([
+            expect(files).toEqual([
                 path.resolve('test/fixtures/ignoreStream/index.js')
             ]);
 
