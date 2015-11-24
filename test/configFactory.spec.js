@@ -2,7 +2,6 @@
 
 var path = require('path'),
     _ = require('lodash'),
-    expect = require('expect.js'),
     WebpackConfig = require('webpack-config'),
     configFactory = require('../lib/configFactory');
 
@@ -20,8 +19,8 @@ describe('ConfigFactory', function () {
     it('should load `Config`', function() {
         var config = configFactory(SIMPLE_FILENAME);
 
-        expect(config).to.be.an(WebpackConfig);
-        expect(config.toObject()).to.eql(SIMPLE_CONFIG);
+        expect(config).toEqual(jasmine.any(WebpackConfig));
+        expect(config.toObject()).toEqual(SIMPLE_CONFIG);
     });
 
     it('should load `Config` and override existing properties', function() {
@@ -29,8 +28,8 @@ describe('ConfigFactory', function () {
             foo: 'bar'
         });
 
-        expect(config).to.be.an(WebpackConfig);
-        expect(config.toObject()).to.eql(_.extend({}, SIMPLE_CONFIG, {
+        expect(config).toEqual(jasmine.any(WebpackConfig));
+        expect(config.toObject()).toEqual(_.extend({}, SIMPLE_CONFIG, {
             foo: 'bar'
         }));
     });
@@ -39,9 +38,9 @@ describe('ConfigFactory', function () {
         var configs = configFactory(ARRAY_FILENAME),
             config = configs[0];
 
-        expect(configs).to.be.an(Array);
-        expect(config).to.be.an(WebpackConfig);
-        expect(config.toObject()).to.eql(SIMPLE_CONFIG);
+        expect(configs).toEqual(jasmine.any(Array));
+        expect(config).toEqual(jasmine.any(WebpackConfig));
+        expect(config.toObject()).toEqual(SIMPLE_CONFIG);
     });
 
     it('should load `Config[]` and override existing properties', function() {
@@ -50,9 +49,9 @@ describe('ConfigFactory', function () {
             }),
             config = configs[0];
 
-        expect(configs).to.be.an(Array);
-        expect(config).to.be.an(WebpackConfig);
-        expect(config.toObject()).to.eql(_.extend({}, SIMPLE_CONFIG, {
+        expect(configs).toEqual(jasmine.any(Array));
+        expect(config).toEqual(jasmine.any(WebpackConfig));
+        expect(config.toObject()).toEqual(_.extend({}, SIMPLE_CONFIG, {
             foo: 'bar'
         }));
     });

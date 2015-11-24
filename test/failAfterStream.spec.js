@@ -1,7 +1,6 @@
 'use strict';
 
-var expect = require('expect.js'),
-    fs = require('vinyl-fs'),
+var fs = require('vinyl-fs'),
     initStream = require('../lib/initStream'),
     runStream = require('../lib/runStream'),
     failAfterStream = require('../lib/failAfterStream');
@@ -20,7 +19,7 @@ describe('failAfterStream', function () {
             });
 
         failAfter.on('error', function(err) {
-            expect(err.message).to.contain(failAfterStream.MESSAGE);
+            expect(err.message).toContain(failAfterStream.MESSAGE);
 
             done();
         });

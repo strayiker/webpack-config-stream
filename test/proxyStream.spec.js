@@ -1,7 +1,6 @@
 'use strict';
 
-var expect = require('expect.js'),
-    fs = require('vinyl-fs'),
+var fs = require('vinyl-fs'),
     proxyStream = require('../lib/proxyStream');
 
 describe('proxyStream', function () {
@@ -11,7 +10,7 @@ describe('proxyStream', function () {
             proxy = proxyStream(error);
 
         entry.pipe(proxy).on('error', function(err) {
-            expect(err.message).to.eql(error.message);
+            expect(err.message).toEqual(error.message);
 
             done();
         }).resume();

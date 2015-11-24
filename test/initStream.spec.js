@@ -1,7 +1,6 @@
 'use strict';
 
-var expect = require('expect.js'),
-    fs = require('vinyl-fs'),
+var fs = require('vinyl-fs'),
     initStream = require('../lib/initStream'),
     progressCallback = require('../lib/progressCallback');
 
@@ -15,7 +14,7 @@ describe('initStream', function () {
             init = initStream(options);
 
         init.on('data', function(chunk) {
-            expect(chunk[initStream.FIELD_NAME]).to.eql({
+            expect(chunk[initStream.FIELD_NAME]).toEqual({
                 useMemoryFs: true,
                 progress: progressCallback
             });
@@ -31,7 +30,7 @@ describe('initStream', function () {
             init = initStream();
 
         init.on('data', function(chunk) {
-            expect(chunk[initStream.FIELD_NAME]).to.eql({});
+            expect(chunk[initStream.FIELD_NAME]).toEqual({});
 
             done();
         });

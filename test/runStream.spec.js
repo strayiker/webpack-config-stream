@@ -1,20 +1,14 @@
 'use strict';
 
-var expect = require('expect.js'),
-    fs = require('vinyl-fs'),
+var fs = require('vinyl-fs'),
     gutil = require('gulp-util'),
     initStream = require('../lib/initStream'),
     runStream = require('../lib/runStream');
 
 describe('runStream', function () {
-    var log = gutil.log;
-
     beforeEach(function() {
-        gutil.log = function() {};
-    });
-
-    afterEach(function() {
-        gutil.log = log;
+        spyOn(gutil, 'log');
+        spyOn(process.stdout, 'write');
     });
 
     it('should compile config successfully', function(done) {
@@ -24,8 +18,8 @@ describe('runStream', function () {
                 progress: true
             }),
             run = runStream(function(err, stats) {
-                expect(err).to.be(null);
-                expect(stats).to.be.an(Object);
+                expect(err).toEqual(null);
+                expect(stats).toEqual(jasmine.any(Object));
 
                 done();
             });

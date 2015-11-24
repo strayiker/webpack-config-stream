@@ -1,7 +1,6 @@
 'use strict';
 
-var expect = require('expect.js'),
-    fs = require('vinyl-fs'),
+var fs = require('vinyl-fs'),
     propsStream = require('../lib/propsStream');
 
 describe('propsStream', function () {
@@ -15,7 +14,7 @@ describe('propsStream', function () {
             props = propsStream(options);
 
         props.on('data', function(chunk) {
-            expect(chunk[propsStream.FIELD_NAME]).to.eql(options);
+            expect(chunk[propsStream.FIELD_NAME]).toEqual(options);
 
             done();
         });
