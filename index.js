@@ -13,16 +13,6 @@ var webpack = require('webpack'),
     ignoreStream = require('./lib/ignoreStream');
 
 /**
- * Called when `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
- * **Note**: `this` is stream of `webpack.config.js` file.
- * @callback compilationCallback
- * @type {Function}
- * @param {Error} err - Error.
- * @param {Stats} stats - Stats.
- * @this Stream
- */
-
-/**
  * Error
  * @external Error
  * @type {Error}
