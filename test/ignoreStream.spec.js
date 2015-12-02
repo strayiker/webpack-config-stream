@@ -2,7 +2,8 @@
 
 var path = require('path'),
     fs = require('vinyl-fs'),
-    ignoreStream = require('../lib/ignoreStream');
+    ignoreStream = require('../lib/ignoreStream'),
+    IgnoreStrategy = require('../lib/ignoreStrategy');
 
 describe('ignoreStream', function () {
     var files;
@@ -28,7 +29,7 @@ describe('ignoreStream', function () {
 
     it('should ignore `webpack*config.js`', function(done) {
         var entry = fs.src(['test/fixtures/ignoreStream/index.js', 'test/fixtures/ignoreStream/webpack*config.js']),
-            ignore = ignoreStream('webpack*config.js');
+            ignore = ignoreStream(new IgnoreStrategy({ pattern: 'webpack*config.js' }));
 
         ignore.on('data', function(chunk) {
             files.push(path.resolve(chunk.path));
