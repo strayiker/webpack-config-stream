@@ -1,6 +1,6 @@
 'use strict';
 
-var fs = require('vinyl-fs'),
+var vfs = require('vinyl-fs'),
     gutil = require('gulp-util'),
     initStream = require('../lib/initStream'),
     watchStream = require('../lib/watchStream');
@@ -11,7 +11,7 @@ describe('watchStream', function () {
     });
 
     it('should compile config successfully', function(done) {
-        var entry = fs.src('test/fixtures/watchStream/webpack.config.js'),
+        var entry = vfs.src('test/fixtures/watchStream/webpack.config.js'),
             init = initStream({
                 useMemoryFs: true,
                 progress: false

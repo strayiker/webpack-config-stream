@@ -1,6 +1,6 @@
 'use strict';
 
-var fs = require('vinyl-fs'),
+var vfs = require('vinyl-fs'),
     propsStream = require('../lib/propsStream');
 
 describe('propsStream', function () {
@@ -10,7 +10,7 @@ describe('propsStream', function () {
                 devtool: '#source-map',
                 watchDelay: 200
             },
-            entry = fs.src('test/fixtures/propsStream/webpack.config.js'),
+            entry = vfs.src('test/fixtures/propsStream/webpack.config.js'),
             props = propsStream(options);
 
         props.on('data', function(chunk) {

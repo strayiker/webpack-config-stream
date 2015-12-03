@@ -1,6 +1,6 @@
 'use strict';
 
-var fs = require('vinyl-fs'),
+var vfs = require('vinyl-fs'),
     initStream = require('../lib/initStream'),
     progressCallback = require('../lib/progressCallback');
 
@@ -10,7 +10,7 @@ describe('initStream', function () {
                 useMemoryFs: true,
                 progress: true
             },
-            entry = fs.src('test/fixtures/initStream/webpack.config.js'),
+            entry = vfs.src('test/fixtures/initStream/webpack.config.js'),
             init = initStream(options);
 
         init.on('data', function(chunk) {
@@ -26,7 +26,7 @@ describe('initStream', function () {
     });
 
     it('should init empty options', function(done) {
-        var entry = fs.src('test/fixtures/initStream/webpack.config.js'),
+        var entry = vfs.src('test/fixtures/initStream/webpack.config.js'),
             init = initStream();
 
         init.on('data', function(chunk) {

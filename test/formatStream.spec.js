@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash'),
-    fs = require('vinyl-fs'),
+    vfs = require('vinyl-fs'),
     gutil = require('gulp-util'),
     initStream = require('../lib/initStream'),
     runStream = require('../lib/runStream'),
@@ -13,7 +13,7 @@ describe('formatStream', function () {
     });
 
     it('should call `stats.toString()`', function(done) {
-        var entry = fs.src('test/fixtures/formatStream/webpack.config.js'),
+        var entry = vfs.src('test/fixtures/formatStream/webpack.config.js'),
             init = initStream({
                 useMemoryFs: true,
                 progress: false
