@@ -54,6 +54,7 @@
     "vinyl-fs": "^2.2.1"
   },
   "dependencies": {
+    "bluebird": "^3.0.6",
     "gulp-util": "^3.0.4",
     "lodash": "^3.10.0",
     "memory-fs": "^0.3.0",
