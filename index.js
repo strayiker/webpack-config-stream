@@ -10,7 +10,8 @@ var webpack = require('webpack'),
     proxyStream = require('./lib/proxyStream'),
     propsStream = require('./lib/propsStream'),
     initStream = require('./lib/initStream'),
-    ignoreStream = require('./lib/ignoreStream');
+    ignoreStream = require('./lib/ignoreStream'),
+    cacheStream = require('./lib/cacheStream');
 
 /**
  * Error
@@ -120,6 +121,12 @@ index.init = initStream;
  * @static
  */
 index.ignore = ignoreStream;
+
+/**
+ * @property {cacheStream}
+ * @static
+ */
+index.cache = cacheStream;
 
 /**
  * @property {Webpack}

@@ -15,7 +15,8 @@ describe('index', function () {
             proxy: Function,
             props: Function,
             init: Function,
-            webpack: Function
+            webpack: Function,
+            cache: Function
         }, function(value, key) {
             expect(_.get(Index, key)).toEqual(jasmine.any(value));
         });
