@@ -1,31 +1,24 @@
 'use strict';
 
-var expect = require('expect.js'),
-    fs = require('vinyl-fs'),
+var vfs = require('vinyl-fs'),
     gutil = require('gulp-util'),
     initStream = require('../lib/initStream'),
     watchStream = require('../lib/watchStream');
 
 describe('watchStream', function () {
-    var log = gutil.log;
-
     beforeEach(function() {
-        gutil.log = function() {};
-    });
-
-    afterEach(function() {
-        gutil.log = log;
+        spyOn(gutil, 'log');
     });
 
     it('should compile config successfully', function(done) {
-        var entry = fs.src('test/fixtures/watchStream/webpack.config.js'),
+        var entry = vfs.src('test/fixtures/watchStream/webpack.config.js'),
             init = initStream({
                 useMemoryFs: true,
                 progress: false
             }),
             watch = watchStream(function(err, stats) {
-                expect(err).to.be(null);
-                expect(stats).to.be.an(Object);
+                expect(err).toEqual(null);
+                expect(stats).toEqual(jasmine.any(Object));
 
                 done();
             });

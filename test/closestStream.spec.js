@@ -2,20 +2,20 @@
 
 var path = require('path'),
     _ = require('lodash'),
-    expect = require('expect.js'),
-    fs = require('vinyl-fs'),
+    vfs = require('vinyl-fs'),
     WebpackConfig = require('webpack-config'),
-    closestStream = require('../lib/closestStream');
+    closestStream = require('../lib/closestStream'),
+    DefaultClosestStrategy = require('../lib/defaultClosestStrategy');
 
 describe('closestStream', function () {
     it('should find closest config by default name', function(done) {
-        var entry = fs.src('test/fixtures/closestStream/dir1/dir2/dir3/index.js'),
+        var entry = vfs.src('test/fixtures/closestStream/dir1/dir2/dir3/index.js'),
             closest = closestStream();
 
         closest.on('data', function(chunk) {
             var filename = path.resolve(path.join('test/fixtures/closestStream', WebpackConfig.FILENAME));
 
-            expect(chunk.history).to.contain(filename);
+            expect(chunk.history).toContain(filename);
 
             done();
         });
@@ -25,13 +25,13 @@ describe('closestStream', function () {
 
     it('should find closest config by custom name', function(done) {
         var basename = 'webpack.1.config.js',
-            entry = fs.src('test/fixtures/closestStream/dir1/dir2/dir3/index.js'),
-            closest = closestStream(basename);
+            entry = vfs.src('test/fixtures/closestStream/dir1/dir2/dir3/index.js'),
+            closest = closestStream(new DefaultClosestStrategy({ basename: basename }));
 
         closest.on('data', function(chunk) {
             var filename = path.resolve(path.join('test/fixtures/closestStream/dir1', basename));
 
-            expect(chunk.history).to.contain(filename);
+            expect(chunk.history).toContain(filename);
 
             done();
         });
@@ -40,8 +40,8 @@ describe('closestStream', function () {
     });
 
     it('should not find closest config when it does not exist', function(done) {
-        var entry = fs.src('test/fixtures/closestStream/dir1/dir2/dir3/index.js'),
-            closest = closestStream('webpack.not-found.config.js'),
+        var entry = vfs.src('test/fixtures/closestStream/dir1/dir2/dir3/index.js'),
+            closest = closestStream(new DefaultClosestStrategy({ basename: 'webpack.not-found.config.js' })),
             filename;
 
         closest.on('data', function(chunk) {
@@ -49,7 +49,7 @@ describe('closestStream', function () {
         });
 
         entry.on('end', function() {
-            expect(filename).to.be(undefined);
+            expect(filename).toEqual(undefined);
 
             done();
         });

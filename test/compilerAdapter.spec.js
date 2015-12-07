@@ -1,7 +1,6 @@
 'use strict';
 
-var expect = require('expect.js'),
-    fs = require('fs'),
+var fs = require('fs'),
     path = require('path'),
     gutil = require('gulp-util'),
     CompilerAdapter = require('../lib/compilerAdapter');
@@ -25,22 +24,22 @@ describe('CompilerAdapter', function () {
         });
     });
 
-    context('#run()', function() {
+    describe('#run()', function() {
         it('should compile config successfully', function(done) {
             compilerAdapter.run(file, function(err, stats) {
-                expect(err).to.be(null);
-                expect(stats).to.be.an(Object);
+                expect(err).toEqual(null);
+                expect(stats).toEqual(jasmine.any(Object));
 
                 done();
             });
         });
 
         it('should throw error when `callback` is not `Function`', function() {
-            expect(compilerAdapter.run).withArgs(file).to.throwError();
+            expect(compilerAdapter.run, file).toThrowError();
         });
     });
 
-    context('#watch()', function() {
+    describe('#watch()', function() {
         it('should compile config successfully', function(done) {
             compilerAdapter.watch(file, done);
         });
@@ -48,8 +47,8 @@ describe('CompilerAdapter', function () {
         it('should recompile config successfully', function(done) {
             compilerAdapter.watch(file, function() {
                 compilerAdapter.watch(file, function(err, stats) {
-                    expect(err).to.be(null);
-                    expect(stats).to.be.an(Object);
+                    expect(err).toEqual(null);
+                    expect(stats).toEqual(jasmine.any(Object));
 
                     done();
                 });
@@ -57,7 +56,7 @@ describe('CompilerAdapter', function () {
         });
 
         it('should throw error when `callback` is not `Function`', function() {
-            expect(compilerAdapter.watch).withArgs(file).to.throwError();
+            expect(compilerAdapter.watch, file).toThrowError();
         });
     });
 });

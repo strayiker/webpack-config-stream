@@ -10,17 +10,8 @@ var webpack = require('webpack'),
     proxyStream = require('./lib/proxyStream'),
     propsStream = require('./lib/propsStream'),
     initStream = require('./lib/initStream'),
-    ignoreStream = require('./lib/ignoreStream');
-
-/**
- * Called when `webpack.config.js` file is compiled. Will be passed `err` and `stats` objects.
- * **Note**: `this` is stream of `webpack.config.js` file.
- * @callback compilationCallback
- * @type {Function}
- * @param {Error} err - Error.
- * @param {Stats} stats - Stats.
- * @this Stream
- */
+    ignoreStream = require('./lib/ignoreStream'),
+    cacheStream = require('./lib/cacheStream');
 
 /**
  * Error
@@ -130,6 +121,12 @@ index.init = initStream;
  * @static
  */
 index.ignore = ignoreStream;
+
+/**
+ * @property {cacheStream}
+ * @static
+ */
+index.cache = cacheStream;
 
 /**
  * @property {Webpack}

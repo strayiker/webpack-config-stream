@@ -1,9 +1,9 @@
 'use strict';
 
-var expect = require('expect.js'),
-    path = require('path'),
-    fs = require('vinyl-fs'),
-    ignoreStream = require('../lib/ignoreStream');
+var path = require('path'),
+    vfs = require('vinyl-fs'),
+    ignoreStream = require('../lib/ignoreStream'),
+    DefaultIgnoreStrategy = require('../lib/defaultIgnoreStrategy');
 
 describe('ignoreStream', function () {
     var files;
@@ -13,7 +13,7 @@ describe('ignoreStream', function () {
     });
 
     it('should ignore `webpack.config.js`', function(done) {
-        var entry = fs.src('test/fixtures/ignoreStream/webpack.config.js'),
+        var entry = vfs.src('test/fixtures/ignoreStream/webpack.config.js'),
             ignore = ignoreStream();
 
         ignore.on('data', function(chunk) {
@@ -21,22 +21,22 @@ describe('ignoreStream', function () {
         });
 
         entry.pipe(ignore).on('end', function() {
-            expect(files).to.be.empty();
+            expect(files.length).toEqual(0);
 
             done();
         }).resume();
     });
 
     it('should ignore `webpack*config.js`', function(done) {
-        var entry = fs.src(['test/fixtures/ignoreStream/index.js', 'test/fixtures/ignoreStream/webpack*config.js']),
-            ignore = ignoreStream('webpack*config.js');
+        var entry = vfs.src(['test/fixtures/ignoreStream/index.js', 'test/fixtures/ignoreStream/webpack*config.js']),
+            ignore = ignoreStream(new DefaultIgnoreStrategy({ pattern: 'webpack*config.js' }));
 
         ignore.on('data', function(chunk) {
             files.push(path.resolve(chunk.path));
         });
 
         entry.pipe(ignore).on('end', function() {
-            expect(files).to.eql([
+            expect(files).toEqual([
                 path.resolve('test/fixtures/ignoreStream/index.js')
             ]);
 

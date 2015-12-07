@@ -1,31 +1,19 @@
 'use strict';
 
-var expect = require('expect.js'),
-    _ = require('lodash'),
-    fs = require('vinyl-fs'),
+var _ = require('lodash'),
+    vfs = require('vinyl-fs'),
     gutil = require('gulp-util'),
     initStream = require('../lib/initStream'),
     runStream = require('../lib/runStream'),
     formatStream = require('../lib/formatStream');
 
 describe('formatStream', function () {
-    var log = gutil.log,
-        buffer = [];
-
     beforeEach(function() {
-        gutil.log = function() {
-            buffer = _.union(buffer, _.toArray(arguments));
-        };
-    });
-
-    afterEach(function() {
-        buffer = [];
-
-        gutil.log = log;
+        spyOn(gutil, 'log');
     });
 
     it('should call `stats.toString()`', function(done) {
-        var entry = fs.src('test/fixtures/formatStream/webpack.config.js'),
+        var entry = vfs.src('test/fixtures/formatStream/webpack.config.js'),
             init = initStream({
                 useMemoryFs: true,
                 progress: false
@@ -36,9 +24,9 @@ describe('formatStream', function () {
             });
 
         entry.pipe(init).pipe(run).pipe(format).on('end', function() {
-            expect(buffer).to.contain(formatStream.MESSAGE);
-            expect(buffer).to.match(/Hash/);
-            expect(buffer).to.match(/Time/);
+            var args = _.flatten(gutil.log.calls.allArgs());
+
+            expect(args).toEqual(jasmine.arrayContaining([formatStream.MESSAGE]));
 
             done();
         }).resume();
