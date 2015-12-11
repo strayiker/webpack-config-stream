@@ -39,19 +39,13 @@
 </dl>
 ## Classes
 <dl>
-<dt><a href="#CacheStrategy">CacheStrategy</a></dt>
-<dd></dd>
-<dt><a href="#ClosestStrategy">ClosestStrategy</a></dt>
-<dd></dd>
 <dt><a href="#CompilerAdapter">CompilerAdapter</a></dt>
 <dd></dd>
-<dt><a href="#DefaultCacheStrategy">DefaultCacheStrategy</a> ⇐ <code><a href="#CacheStrategy">CacheStrategy</a></code></dt>
+<dt><a href="#DefaultCacheStrategy">DefaultCacheStrategy</a></dt>
 <dd></dd>
-<dt><a href="#DefaultClosestStrategy">DefaultClosestStrategy</a> ⇐ <code><a href="#ClosestStrategy">ClosestStrategy</a></code></dt>
+<dt><a href="#DefaultClosestStrategy">DefaultClosestStrategy</a></dt>
 <dd></dd>
-<dt><a href="#DefaultIgnoreStrategy">DefaultIgnoreStrategy</a> ⇐ <code><a href="#IgnoreStrategy">IgnoreStrategy</a></code></dt>
-<dd></dd>
-<dt><a href="#IgnoreStrategy">IgnoreStrategy</a></dt>
+<dt><a href="#DefaultIgnoreStrategy">DefaultIgnoreStrategy</a></dt>
 <dd></dd>
 <dt><a href="#PatternResolver">PatternResolver</a></dt>
 <dd></dd>
@@ -164,19 +158,11 @@
 ## webpack-config-stream/lib/watchStream ⇒ <code>[watchStream](#watchStream)</code>
 <a name="CacheStrategy"></a>
 ## CacheStrategy
-**Kind**: global class  
+**Kind**: global interface  
 
 * [CacheStrategy](#CacheStrategy)
-  * [new CacheStrategy([options])](#new_CacheStrategy_new)
   * *[.executeStart(stream, chunk)](#CacheStrategy+executeStart) ⇒ <code>Promise</code>*
   * *[.executeEnd()](#CacheStrategy+executeEnd) ⇒ <code>Promise</code>*
-
-<a name="new_CacheStrategy_new"></a>
-### new CacheStrategy([options])
-
-| Param | Type |
-| --- | --- |
-| [options] | <code>Object</code> | 
 
 <a name="CacheStrategy+executeStart"></a>
 ### *cacheStrategy.executeStart(stream, chunk) ⇒ <code>Promise</code>*
@@ -192,22 +178,22 @@
 **Kind**: instance abstract method of <code>[CacheStrategy](#CacheStrategy)</code>  
 <a name="ClosestStrategy"></a>
 ## ClosestStrategy
-**Kind**: global class  
-
-* [ClosestStrategy](#ClosestStrategy)
-  * [new ClosestStrategy([options])](#new_ClosestStrategy_new)
-  * *[.execute(stream, chunk)](#ClosestStrategy+execute) ⇒ <code>Promise</code>*
-
-<a name="new_ClosestStrategy_new"></a>
-### new ClosestStrategy([options])
-
-| Param | Type |
-| --- | --- |
-| [options] | <code>Object</code> | 
-
+**Kind**: global interface  
 <a name="ClosestStrategy+execute"></a>
 ### *closestStrategy.execute(stream, chunk) ⇒ <code>Promise</code>*
 **Kind**: instance abstract method of <code>[ClosestStrategy](#ClosestStrategy)</code>  
+
+| Param | Type |
+| --- | --- |
+| stream | <code>Stream</code> | 
+| chunk | <code>File</code> | 
+
+<a name="IgnoreStrategy"></a>
+## IgnoreStrategy
+**Kind**: global interface  
+<a name="IgnoreStrategy+execute"></a>
+### *ignoreStrategy.execute(stream, chunk) ⇒ <code>Promise</code>*
+**Kind**: instance abstract method of <code>[IgnoreStrategy](#IgnoreStrategy)</code>  
 
 | Param | Type |
 | --- | --- |
@@ -254,14 +240,14 @@ Runs compiler in `watch` mode
 | callback | <code>compilerCallback</code> | 
 
 <a name="DefaultCacheStrategy"></a>
-## DefaultCacheStrategy ⇐ <code>[CacheStrategy](#CacheStrategy)</code>
+## DefaultCacheStrategy
 **Kind**: global class  
-**Extends:** <code>[CacheStrategy](#CacheStrategy)</code>  
+**Implements:** <code>[CacheStrategy](#CacheStrategy)</code>  
 
-* [DefaultCacheStrategy](#DefaultCacheStrategy) ⇐ <code>[CacheStrategy](#CacheStrategy)</code>
+* [DefaultCacheStrategy](#DefaultCacheStrategy)
   * [new DefaultCacheStrategy([options])](#new_DefaultCacheStrategy_new)
-  * [.executeStart(stream, chunk)](#CacheStrategy+executeStart) ⇒ <code>Promise</code>
-  * [.executeEnd()](#CacheStrategy+executeEnd) ⇒ <code>Promise</code>
+  * [.executeStart(stream, chunk)](#DefaultCacheStrategy+executeStart) ⇒ <code>Promise</code>
+  * [.executeEnd()](#DefaultCacheStrategy+executeEnd) ⇒ <code>Promise</code>
 
 <a name="new_DefaultCacheStrategy_new"></a>
 ### new DefaultCacheStrategy([options])
@@ -269,30 +255,30 @@ Runs compiler in `watch` mode
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | [options] | <code>Object</code> |  |  |
-| [options.dependsOn] | <code>Array.&lt;String&gt;</code> | <code>[]</code> | Array of `minimatch` [patterns](https://github.com/isaacs/minimatch#features). Available macros: - `[filename]` - full path to `webpack.config.js` - `[dirname]` - directory of `webpack.config.js` |
+| [options.dependsOn] | <code>Array.&lt;String&gt;</code> | <code>[]</code> | Array of `minimatch` [patterns](https://github.com/isaacs/minimatch#features). Available macros: `[filename]` - full path to `webpack.config.js` `[dirname]` - directory of `webpack.config.js` |
 
-<a name="CacheStrategy+executeStart"></a>
+<a name="DefaultCacheStrategy+executeStart"></a>
 ### defaultCacheStrategy.executeStart(stream, chunk) ⇒ <code>Promise</code>
 **Kind**: instance method of <code>[DefaultCacheStrategy](#DefaultCacheStrategy)</code>  
-**Overrides:** <code>[executeStart](#CacheStrategy+executeStart)</code>  
+**Implements:** <code>[executeStart](#CacheStrategy+executeStart)</code>  
 
 | Param | Type |
 | --- | --- |
 | stream | <code>Stream</code> | 
 | chunk | <code>File</code> | 
 
-<a name="CacheStrategy+executeEnd"></a>
+<a name="DefaultCacheStrategy+executeEnd"></a>
 ### defaultCacheStrategy.executeEnd() ⇒ <code>Promise</code>
 **Kind**: instance method of <code>[DefaultCacheStrategy](#DefaultCacheStrategy)</code>  
-**Overrides:** <code>[executeEnd](#CacheStrategy+executeEnd)</code>  
+**Implements:** <code>[executeEnd](#CacheStrategy+executeEnd)</code>  
 <a name="DefaultClosestStrategy"></a>
-## DefaultClosestStrategy ⇐ <code>[ClosestStrategy](#ClosestStrategy)</code>
+## DefaultClosestStrategy
 **Kind**: global class  
-**Extends:** <code>[ClosestStrategy](#ClosestStrategy)</code>  
+**Implements:** <code>[ClosestStrategy](#ClosestStrategy)</code>  
 
-* [DefaultClosestStrategy](#DefaultClosestStrategy) ⇐ <code>[ClosestStrategy](#ClosestStrategy)</code>
+* [DefaultClosestStrategy](#DefaultClosestStrategy)
   * [new DefaultClosestStrategy([options])](#new_DefaultClosestStrategy_new)
-  * [.execute(stream, chunk)](#ClosestStrategy+execute) ⇒ <code>Promise</code>
+  * [.execute(stream, chunk)](#DefaultClosestStrategy+execute) ⇒ <code>Promise</code>
 
 <a name="new_DefaultClosestStrategy_new"></a>
 ### new DefaultClosestStrategy([options])
@@ -302,10 +288,10 @@ Runs compiler in `watch` mode
 | [options] | <code>Object</code> |  | 
 | [options.basename] | <code>String</code> | <code>&#x27;webpack.config.js&#x27;</code> | 
 
-<a name="ClosestStrategy+execute"></a>
+<a name="DefaultClosestStrategy+execute"></a>
 ### defaultClosestStrategy.execute(stream, chunk) ⇒ <code>Promise</code>
 **Kind**: instance method of <code>[DefaultClosestStrategy](#DefaultClosestStrategy)</code>  
-**Overrides:** <code>[execute](#ClosestStrategy+execute)</code>  
+**Implements:** <code>[execute](#ClosestStrategy+execute)</code>  
 
 | Param | Type |
 | --- | --- |
@@ -313,13 +299,13 @@ Runs compiler in `watch` mode
 | chunk | <code>File</code> | 
 
 <a name="DefaultIgnoreStrategy"></a>
-## DefaultIgnoreStrategy ⇐ <code>[IgnoreStrategy](#IgnoreStrategy)</code>
+## DefaultIgnoreStrategy
 **Kind**: global class  
-**Extends:** <code>[IgnoreStrategy](#IgnoreStrategy)</code>  
+**Implements:** <code>[IgnoreStrategy](#IgnoreStrategy)</code>  
 
-* [DefaultIgnoreStrategy](#DefaultIgnoreStrategy) ⇐ <code>[IgnoreStrategy](#IgnoreStrategy)</code>
+* [DefaultIgnoreStrategy](#DefaultIgnoreStrategy)
   * [new DefaultIgnoreStrategy([options])](#new_DefaultIgnoreStrategy_new)
-  * [.execute(stream, chunk)](#IgnoreStrategy+execute) ⇒ <code>Promise</code>
+  * [.execute(stream, chunk)](#DefaultIgnoreStrategy+execute) ⇒ <code>Promise</code>
 
 <a name="new_DefaultIgnoreStrategy_new"></a>
 ### new DefaultIgnoreStrategy([options])
@@ -329,34 +315,10 @@ Runs compiler in `watch` mode
 | [options] | <code>Object</code> |  |  |
 | [options.pattern] | <code>String</code> | <code>&#x27;webpack.config.js&#x27;</code> | `minimatch` [pattern](https://github.com/isaacs/minimatch#features). |
 
-<a name="IgnoreStrategy+execute"></a>
+<a name="DefaultIgnoreStrategy+execute"></a>
 ### defaultIgnoreStrategy.execute(stream, chunk) ⇒ <code>Promise</code>
 **Kind**: instance method of <code>[DefaultIgnoreStrategy](#DefaultIgnoreStrategy)</code>  
-**Overrides:** <code>[execute](#IgnoreStrategy+execute)</code>  
-
-| Param | Type |
-| --- | --- |
-| stream | <code>Stream</code> | 
-| chunk | <code>File</code> | 
-
-<a name="IgnoreStrategy"></a>
-## IgnoreStrategy
-**Kind**: global class  
-
-* [IgnoreStrategy](#IgnoreStrategy)
-  * [new IgnoreStrategy([options])](#new_IgnoreStrategy_new)
-  * *[.execute(stream, chunk)](#IgnoreStrategy+execute) ⇒ <code>Promise</code>*
-
-<a name="new_IgnoreStrategy_new"></a>
-### new IgnoreStrategy([options])
-
-| Param | Type |
-| --- | --- |
-| [options] | <code>Object</code> | 
-
-<a name="IgnoreStrategy+execute"></a>
-### *ignoreStrategy.execute(stream, chunk) ⇒ <code>Promise</code>*
-**Kind**: instance abstract method of <code>[IgnoreStrategy](#IgnoreStrategy)</code>  
+**Implements:** <code>[execute](#IgnoreStrategy+execute)</code>  
 
 | Param | Type |
 | --- | --- |

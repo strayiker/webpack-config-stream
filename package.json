@@ -14,7 +14,7 @@
     "precover": "npm run lint",
     "cover": "istanbul cover jasmine JASMINE_CONFIG_PATH=./jasmine.json",
     "codeclimate": "codeclimate-test-reporter < ./coverage/lcov.info",
-    "doc": "gulp docs",
+    "docs": "gulp docs",
     "postpublish": "publish-latest -a 'package.json README.md docs/API.md'",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
@@ -65,11 +65,11 @@
     "through2": "^2.0.0",
     "tildify": "^1.0.0",
     "webpack": "^1.12.0",
-    "webpack-config": "^2.3.0"
+    "webpack-config": "^3.0.0"
   },
   "peerDependencies": {
     "webpack": "^1.12.0",
-    "webpack-config": "^2.3.0"
+    "webpack-config": "^3.0.0"
   },
-  "version": "3.0.0"
+  "version": "4.0.0"
 }
