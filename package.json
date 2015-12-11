@@ -70,5 +70,6 @@
   "peerDependencies": {
     "webpack": "^1.12.0",
     "webpack-config": "^3.0.0"
-  }
+  },
+  "version": "4.0.0"
 }
