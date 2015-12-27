@@ -7,6 +7,7 @@ var webpack = require('webpack'),
     failAfterStream = require('./lib/failAfterStream'),
     closestStream = require('./lib/closestStream'),
     watchStream = require('./lib/watchStream'),
+    devStream = require('./lib/devStream'),
     proxyStream = require('./lib/proxyStream'),
     propsStream = require('./lib/propsStream'),
     initStream = require('./lib/initStream'),
@@ -73,6 +74,12 @@ var index = {};
  * @static
  */
 index.run = runStream;
+
+/**
+ * @property {devStream}
+ * @static
+ */
+index.dev = devStream;
 
 /**
  * @property {formatStream}
